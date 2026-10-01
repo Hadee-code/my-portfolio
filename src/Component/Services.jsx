@@ -39,39 +39,46 @@ function Services() {
   const { services } = profileData;
 
   return (
-    <section id="services" className="w-full bg-[#0D121F] px-6 md:px-10 lg:px-16 py-24 border-t border-slate-800/80 relative">
-      <div className="w-full max-w-[1440px] mx-auto">
+    <section id="services" className="w-full bg-[#0D121F] px-6 md:px-10 lg:px-16 py-24 border-t border-slate-800/80 relative overflow-hidden">
+      {/* Subtle Ambient Glow */}
+      <div className="absolute top-1/3 left-0 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl pointer-events-none animate-pulse-glow" />
+
+      <div className="w-full max-w-[1440px] mx-auto relative z-10">
         
         {/* Section Heading */}
-        <Reveal direction="up" delay={100}>
-          <div className="text-center max-w-2xl mx-auto mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <Reveal direction="down" delay={100}>
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 mb-3.5 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-blue-500" />
+              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
               <span className="text-blue-400 text-xs font-bold uppercase tracking-wider">Services</span>
             </div>
+          </Reveal>
+          <Reveal direction="clip-up" delay={200}>
             <h2 className="text-white text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
               Specialized <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">Capabilities</span>
             </h2>
+          </Reveal>
+          <Reveal direction="up" delay={300}>
             <p className="text-slate-400 text-sm sm:text-base mt-4 leading-relaxed">
               Delivering full-cycle engineering from responsive frontend interfaces to scalable server architectures, secure authentication, and optimized database systems.
             </p>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
 
-        {/* Services Grid with staggered scroll reveal */}
+        {/* Services Grid with staggered scroll reveal & smooth hover */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {services.map((service, index) => {
             return (
               <Reveal key={service.id} direction="up" delay={100 * (index % 3 + 1)}>
-                <div className="group h-full bg-[#131B2E] rounded-2xl p-7 border border-slate-800/90 hover:border-blue-500/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-blue-500/10 flex flex-col justify-between">
+                <div className="group h-full bg-[#131B2E] rounded-2xl p-7 border border-slate-800/90 hover:border-blue-500/60 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/15 flex flex-col justify-between">
                   <div>
-                    {/* Icon */}
-                    <div className="w-13 h-13 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center justify-center text-blue-400 mb-6 group-hover:bg-gradient-to-br group-hover:from-blue-600 group-hover:to-indigo-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                    {/* Icon with smooth scale and gradient background transition */}
+                    <div className="w-13 h-13 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center justify-center text-blue-400 mb-6 group-hover:bg-gradient-to-br group-hover:from-blue-600 group-hover:to-indigo-600 group-hover:text-white group-hover:scale-110 transition-all duration-500 shadow-sm">
                       {serviceIcons[service.icon]}
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-white text-xl font-bold mb-3 group-hover:text-blue-400 transition-colors">
+                    <h3 className="text-white text-xl font-bold mb-3 group-hover:text-blue-400 transition-colors duration-300">
                       {service.title}
                     </h3>
 
@@ -84,7 +91,7 @@ function Services() {
                     <ul className="space-y-2.5">
                       {service.features.map((feature, idx) => (
                         <li key={idx} className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-300">
-                          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0 group-hover:bg-cyan-400 transition-colors" />
                           <span>{feature}</span>
                         </li>
                       ))}

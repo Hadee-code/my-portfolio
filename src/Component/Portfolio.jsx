@@ -198,49 +198,53 @@ function Portfolio() {
       <div className="w-full max-w-[1440px] mx-auto relative z-10">
         
         {/* Section Heading */}
-        <Reveal direction="up" delay={100}>
-          <div className="text-center max-w-2xl mx-auto mb-14">
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <Reveal direction="down" delay={100}>
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 mb-3.5 shadow-sm">
               <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
               <span className="text-blue-400 text-xs font-bold uppercase tracking-wider">Engineering Showcase</span>
             </div>
+          </Reveal>
+          <Reveal direction="clip-up" delay={200}>
             <h2 className="text-white text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
               Featured <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">Projects</span>
             </h2>
+          </Reveal>
+          <Reveal direction="up" delay={300}>
             <p className="text-slate-400 text-sm sm:text-base mt-4 leading-relaxed">
               Full-stack production web applications, database architectures, and responsive user interfaces engineered with modern stacks.
             </p>
+          </Reveal>
 
-            {/* Filter Tabs */}
-            <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mt-8">
-              {filterOptions.map((filter) => {
-                const count = filter === "All" ? projects.length : projects.filter((p) => p.category === filter).length;
-                const isActive = activeFilter === filter;
+          {/* Filter Tabs */}
+          <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mt-8">
+            {filterOptions.map((filter) => {
+              const count = filter === "All" ? projects.length : projects.filter((p) => p.category === filter).length;
+              const isActive = activeFilter === filter;
 
-                return (
-                  <button
-                    key={filter}
-                    onClick={() => setActiveFilter(filter)}
-                    className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 ${
-                      isActive
-                        ? "bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 text-white shadow-lg shadow-blue-500/25 font-bold"
-                        : "bg-[#131B2E] text-slate-300 hover:text-blue-400 hover:bg-slate-800 border border-slate-800/90"
+              return (
+                <button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+                    isActive
+                      ? "bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 text-white shadow-lg shadow-blue-500/25 font-bold"
+                      : "bg-[#131B2E] text-slate-300 hover:text-blue-400 hover:bg-slate-800 border border-slate-800/90"
+                  }`}
+                >
+                  <span>{filter}</span>
+                  <span
+                    className={`text-[10px] px-1.5 py-0.2 rounded-md font-bold ${
+                      isActive ? "bg-white/20 text-white" : "bg-slate-800 text-slate-400"
                     }`}
                   >
-                    <span>{filter}</span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-md font-bold ${
-                        isActive ? "bg-white/20 text-white" : "bg-slate-800 text-slate-400"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
-        </Reveal>
+        </div>
 
         {/* NEW FEATURE: Modern Project Bento Cards with Browser Frames & In-Card Tab Switchers */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -249,7 +253,7 @@ function Portfolio() {
 
             return (
               <Reveal key={project.id} direction="up" delay={100 * (index % 2 + 1)}>
-                <div className="group h-full bg-[#131B2E] rounded-3xl border border-slate-800/90 hover:border-blue-500/60 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-2xl hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-blue-500/10">
+                <div className="group h-full bg-[#131B2E] rounded-3xl border border-slate-800/90 hover:border-blue-500/60 transition-all duration-500 ease-out flex flex-col justify-between overflow-hidden shadow-2xl hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/15">
                   
                   {/* Top Mac-Style Window Frame Header */}
                   <div className="px-6 py-3.5 bg-[#0D1322] border-b border-slate-800 flex items-center justify-between">

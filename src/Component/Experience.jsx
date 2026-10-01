@@ -10,20 +10,24 @@ function Experience() {
       <div className="w-full max-w-[1440px] mx-auto">
         
         {/* Section Heading */}
-        <Reveal direction="up" delay={100}>
-          <div className="text-center max-w-2xl mx-auto mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <Reveal direction="down" delay={100}>
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 mb-3.5 shadow-sm">
               <span className="w-2 h-2 rounded-full bg-blue-500" />
               <span className="text-blue-400 text-xs font-bold uppercase tracking-wider">Journey</span>
             </div>
+          </Reveal>
+          <Reveal direction="clip-up" delay={200}>
             <h2 className="text-white text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
               Experience & <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">Education</span>
             </h2>
+          </Reveal>
+          <Reveal direction="up" delay={300}>
             <p className="text-slate-400 text-sm sm:text-base mt-4 leading-relaxed">
               Hands-on engineering contributions in fast-moving dev environments paired with formal computer science education.
             </p>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           
@@ -46,9 +50,9 @@ function Experience() {
                 {experience.map((job, idx) => (
                   <div key={idx} className="relative group">
                     {/* Timeline Dot */}
-                    <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#0A0E17] border-2 border-blue-500 group-hover:bg-blue-500 group-hover:shadow-[0_0_12px_rgba(59,130,246,0.8)] transition-all" />
+                    <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#0A0E17] border-2 border-blue-500 group-hover:bg-blue-500 group-hover:scale-125 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.9)] transition-all duration-300" />
 
-                    <div className="bg-[#131B2E] rounded-2xl p-6 sm:p-7 border border-slate-800/90 hover:border-blue-500/50 transition-all duration-300 shadow-xl">
+                    <div className="bg-[#131B2E] rounded-2xl p-6 sm:p-7 border border-slate-800/90 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-500 ease-out shadow-xl">
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                         <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
                           {job.period}
@@ -96,9 +100,9 @@ function Experience() {
                 {education.map((edu, idx) => (
                   <div key={idx} className="relative group">
                     {/* Timeline Dot */}
-                    <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#0A0E17] border-2 border-blue-500 group-hover:bg-blue-500 group-hover:shadow-[0_0_12px_rgba(59,130,246,0.8)] transition-all" />
+                    <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#0A0E17] border-2 border-blue-500 group-hover:bg-blue-500 group-hover:scale-125 group-hover:shadow-[0_0_12px_rgba(59,130,246,0.8)] transition-all duration-300" />
 
-                    <div className="bg-[#131B2E] rounded-2xl p-6 sm:p-7 border border-slate-800/90 hover:border-blue-500/50 transition-all duration-300 shadow-xl">
+                    <div className="bg-[#131B2E] rounded-2xl p-6 sm:p-7 border border-slate-800/90 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-500 ease-out shadow-xl">
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                         <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
                           {edu.period}

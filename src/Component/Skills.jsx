@@ -240,18 +240,23 @@ function Skills() {
       <div className="w-full max-w-[1440px] mx-auto">
         
         {/* Section Heading - Clean, authoritative, uncluttered */}
-        <Reveal direction="up" delay={100}>
-          <div className="text-center max-w-2xl mx-auto mb-14">
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <Reveal direction="down" delay={100}>
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 mb-3.5 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-blue-500" />
+              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
               <span className="text-blue-400 text-xs font-bold uppercase tracking-wider">Technical Expertise</span>
             </div>
+          </Reveal>
+          <Reveal direction="clip-up" delay={200}>
             <h2 className="text-white text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
               Technical <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">Proficiency</span>
             </h2>
+          </Reveal>
+          <Reveal direction="up" delay={300}>
             <p className="text-slate-400 text-sm sm:text-base mt-4 leading-relaxed">
               Core technologies and architectural frameworks utilized across production web applications, database systems, and RESTful APIs.
             </p>
+          </Reveal>
 
             {/* Clean, Understated Category Filter */}
             <div className="flex flex-wrap justify-center gap-2.5 mt-8">
@@ -273,13 +278,12 @@ function Skills() {
               })}
             </div>
           </div>
-        </Reveal>
 
         {/* Professional 2x2 Domain Cards Grid - Clean, high signal, executive-level */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {displayedCategories.map((cat, idx) => (
             <Reveal key={cat.id} direction="up" delay={100 * (idx + 1)}>
-              <div className="h-full bg-[#131B2E] rounded-2xl border border-slate-800/90 hover:border-blue-500/50 transition-all duration-300 p-7 sm:p-8 flex flex-col justify-between shadow-xl">
+              <div className="h-full bg-[#131B2E] rounded-2xl border border-slate-800/90 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 ease-out p-7 sm:p-8 flex flex-col justify-between shadow-xl">
                 <div>
                   
                   {/* Category Header */}
@@ -306,7 +310,7 @@ function Skills() {
                     {cat.skills.map((skill) => (
                       <div
                         key={skill.name}
-                        className="group flex items-start justify-between gap-4 p-3 rounded-xl bg-[#0A0E17]/60 border border-slate-800/60 hover:border-blue-500/40 hover:bg-[#0A0E17] transition-all"
+                        className="group flex items-start justify-between gap-4 p-3 rounded-xl bg-[#0A0E17]/60 border border-slate-800/60 hover:border-blue-500/40 hover:bg-[#0A0E17] hover:translate-x-1 transition-all duration-300"
                       >
                         <div className="flex items-start gap-3.5">
                           {/* Tech Brand Icon */}

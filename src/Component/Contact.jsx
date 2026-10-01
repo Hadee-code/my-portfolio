@@ -38,20 +38,24 @@ function Contact() {
       <div className="w-full max-w-[1440px] mx-auto relative z-10">
         
         {/* Section Heading */}
-        <Reveal direction="up" delay={100}>
-          <div className="text-center max-w-2xl mx-auto mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <Reveal direction="down" delay={100}>
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 mb-3.5 shadow-sm">
               <span className="w-2 h-2 rounded-full bg-blue-500" />
               <span className="text-blue-400 text-xs font-bold uppercase tracking-wider">Contact Me</span>
             </div>
+          </Reveal>
+          <Reveal direction="clip-up" delay={200}>
             <h2 className="text-white text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
               Get In <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">Touch</span>
             </h2>
+          </Reveal>
+          <Reveal direction="up" delay={300}>
             <p className="text-slate-400 text-sm sm:text-base mt-4 leading-relaxed">
               Have an opening, an inquiry, or looking to collaborate with a skilled Full Stack Developer? Feel free to reach out anytime.
             </p>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
           
