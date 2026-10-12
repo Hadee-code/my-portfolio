@@ -1,47 +1,71 @@
 import React from "react";
+import { 
+  Briefcase, 
+  GraduationCap, 
+  Calendar, 
+  MapPin, 
+  CheckCircle2, 
+  Cpu, 
+  Building2 
+} from "lucide-react";
 import profileData from "../data/profileData";
 import Reveal from "./Reveal";
 
 function Experience() {
   const { experience, education } = profileData;
 
+  const foundationTopics = [
+    "Data Structures & Algorithms",
+    "Object-Oriented Programming (OOP)",
+    "Database Management Systems (DBMS)",
+    "REST API Engineering",
+    "Distributed Git Version Control",
+    "Agile Development & Problem Solving",
+    "Software Architecture Patterns",
+    "Web Security & Authentication",
+  ];
+
   return (
-    <section id="experience" className="w-full bg-[#0D121F] px-6 md:px-10 lg:px-16 py-24 border-t border-slate-800/80 relative">
-      <div className="w-full max-w-[1440px] mx-auto">
+    <section id="experience" className="w-full bg-[#0A0F1D] px-6 md:px-10 lg:px-16 py-24 border-t border-slate-800/80 relative overflow-hidden bg-lines-pattern">
+      {/* Background Ambient Glows */}
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-600/8 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-indigo-600/8 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="w-full max-w-[1440px] mx-auto relative z-10">
         
         {/* Section Heading */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <Reveal direction="down" delay={100}>
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 mb-3.5 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-blue-500" />
-              <span className="text-blue-400 text-xs font-bold uppercase tracking-wider">Journey</span>
+              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+              <span className="text-blue-400 text-xs font-bold uppercase tracking-wider">Career Trajectory</span>
             </div>
           </Reveal>
+          
           <Reveal direction="clip-up" delay={200}>
             <h2 className="text-white text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
-              Experience & <span className="bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">Education</span>
+              Experience & <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">Education</span>
             </h2>
           </Reveal>
+
           <Reveal direction="up" delay={300}>
-            <p className="text-slate-400 text-sm sm:text-base mt-4 leading-relaxed">
+            <p className="text-slate-300 text-sm sm:text-base mt-4 leading-relaxed font-normal">
               Hands-on engineering contributions in fast-moving dev environments paired with formal computer science education.
             </p>
           </Reveal>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14">
           
           {/* Work Experience Column */}
           <Reveal direction="left" delay={200}>
             <div>
               <div className="flex items-center gap-3.5 mb-8">
-                <div className="w-11 h-11 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center justify-center text-blue-400 shadow-sm">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                  <Briefcase className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-white text-2xl font-bold">Work Experience</h3>
+                  <h3 className="text-white text-2xl font-black">Work Experience</h3>
                   <p className="text-slate-400 text-xs uppercase tracking-wider font-semibold">Professional Engineering Roles</p>
                 </div>
               </div>
@@ -49,29 +73,60 @@ function Experience() {
               <div className="relative border-l-2 border-blue-500/30 pl-6 sm:pl-8 ml-4 space-y-8">
                 {experience.map((job, idx) => (
                   <div key={idx} className="relative group">
-                    {/* Timeline Dot */}
-                    <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#0A0E17] border-2 border-blue-500 group-hover:bg-blue-500 group-hover:scale-125 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.9)] transition-all duration-300" />
+                    {/* Timeline Node with Pulsing Ring */}
+                    <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#070A12] border-2 border-blue-500 group-hover:bg-blue-500 group-hover:scale-125 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.9)] transition-all duration-300" />
 
-                    <div className="bg-[#131B2E] rounded-2xl p-6 sm:p-7 border border-slate-800/90 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-500 ease-out shadow-xl">
-                      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                        <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                          {job.period}
+                    <div className="bg-[#0F172A]/75 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-slate-800/90 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-500 ease-out shadow-xl">
+                      
+                      {/* Top Badges */}
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold px-3 py-1 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5" />
+                            <span>{job.period}</span>
+                          </span>
+                          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <span>{job.type}</span>
+                          </span>
+                        </div>
+
+                        <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
+                          <MapPin className="w-3.5 h-3.5 text-rose-400" />
+                          <span>{job.location}</span>
                         </span>
-                        <span className="text-xs text-slate-400 font-medium">{job.location}</span>
                       </div>
 
-                      <h4 className="text-white text-xl font-bold mt-1.5">{job.role}</h4>
-                      <p className="text-blue-400 text-sm font-semibold mb-3">{job.company}</p>
-                      <p className="text-slate-300 text-sm leading-relaxed mb-5">{job.description}</p>
+                      <h4 className="text-white text-xl sm:text-2xl font-black mt-2">{job.role}</h4>
+                      
+                      <div className="flex items-center gap-2 text-blue-400 text-sm font-bold mb-4">
+                        <Building2 className="w-4 h-4 text-blue-400" />
+                        <span>{job.company}</span>
+                      </div>
 
-                      <div className="space-y-2.5 pt-3 border-t border-slate-800">
+                      <p className="text-slate-300 text-sm leading-relaxed mb-6 font-normal">
+                        {job.description}
+                      </p>
+
+                      {/* Highlights */}
+                      <div className="space-y-3 pt-4 border-t border-slate-800">
                         {job.highlights.map((item, hIdx) => (
                           <div key={hIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-300">
-                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0" />
+                            <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                             <span>{item}</span>
                           </div>
                         ))}
                       </div>
+
+                      {/* Tech Chips */}
+                      <div className="mt-6 pt-4 border-t border-slate-800 flex flex-wrap gap-1.5">
+                        {["MERN Stack", "React 19", "Next.js", "Node.js", "Express", "MongoDB", "PostgreSQL", "JWT", "Git"].map((t) => (
+                          <span key={t} className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-[#070A12] text-slate-300 border border-slate-800">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+
                     </div>
                   </div>
                 ))}
@@ -83,15 +138,11 @@ function Experience() {
           <Reveal direction="right" delay={300}>
             <div>
               <div className="flex items-center gap-3.5 mb-8">
-                <div className="w-11 h-11 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center justify-center text-blue-400 shadow-sm">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path d="M12 14l9-5-9-5-9 5 9 5z" />
-                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
-                  </svg>
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-cyan-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
+                  <GraduationCap className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-white text-2xl font-bold">Education</h3>
+                  <h3 className="text-white text-2xl font-black">Education</h3>
                   <p className="text-slate-400 text-xs uppercase tracking-wider font-semibold">Academic Foundation</p>
                 </div>
               </div>
@@ -99,42 +150,47 @@ function Experience() {
               <div className="relative border-l-2 border-blue-500/30 pl-6 sm:pl-8 ml-4 space-y-8">
                 {education.map((edu, idx) => (
                   <div key={idx} className="relative group">
-                    {/* Timeline Dot */}
-                    <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#0A0E17] border-2 border-blue-500 group-hover:bg-blue-500 group-hover:scale-125 group-hover:shadow-[0_0_12px_rgba(59,130,246,0.8)] transition-all duration-300" />
+                    {/* Timeline Node */}
+                    <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#070A12] border-2 border-blue-500 group-hover:bg-blue-500 group-hover:scale-125 group-hover:shadow-[0_0_12px_rgba(59,130,246,0.8)] transition-all duration-300" />
 
-                    <div className="bg-[#131B2E] rounded-2xl p-6 sm:p-7 border border-slate-800/90 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-500 ease-out shadow-xl">
-                      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                        <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                          {edu.period}
+                    <div className="bg-[#0F172A]/75 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-slate-800/90 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-500 ease-out shadow-xl">
+                      
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <span className="text-xs font-bold px-3 py-1 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center gap-1.5">
+                          <Calendar className="w-3.5 h-3.5" />
+                          <span>{edu.period}</span>
                         </span>
-                        <span className="text-xs text-slate-400 font-medium">{edu.location}</span>
+                        <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
+                          <MapPin className="w-3.5 h-3.5 text-rose-400" />
+                          <span>{edu.location}</span>
+                        </span>
                       </div>
 
-                      <h4 className="text-white text-xl font-bold mt-1.5">{edu.degree}</h4>
-                      <p className="text-blue-400 text-sm font-semibold mb-3">{edu.institution}</p>
-                      <p className="text-slate-300 text-sm leading-relaxed">{edu.description}</p>
+                      <h4 className="text-white text-xl sm:text-2xl font-black mt-2">{edu.degree}</h4>
+                      <p className="text-blue-400 text-sm font-bold mb-4">{edu.institution}</p>
+                      <p className="text-slate-300 text-sm leading-relaxed font-normal">{edu.description}</p>
                     </div>
                   </div>
                 ))}
 
-                {/* Core Strengths Card */}
+                {/* Core Theoretical Foundations Card */}
                 <div className="relative group">
-                  <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#0A0E17] border-2 border-slate-700 group-hover:border-blue-500 transition-colors" />
-                  <div className="bg-[#131B2E] rounded-2xl p-6 sm:p-7 border border-slate-800/90 shadow-xl">
-                    <h4 className="text-white text-lg font-bold mb-2">Core Foundation</h4>
-                    <p className="text-slate-400 text-xs mb-4 font-semibold">Key Academic & Theoretical Competencies</p>
+                  <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#070A12] border-2 border-slate-700 group-hover:border-blue-500 transition-colors" />
+                  
+                  <div className="bg-[#0F172A]/75 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-slate-800/90 shadow-xl">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Cpu className="w-4 h-4 text-cyan-400" />
+                      <h4 className="text-white text-lg font-bold">Core Academic Foundations</h4>
+                    </div>
+                    <p className="text-slate-400 text-xs mb-5 font-semibold">
+                      Key Theoretical Disciplines & CS Fundamentals
+                    </p>
+                    
                     <div className="flex flex-wrap gap-2">
-                      {[
-                        "Data Structures & Algorithms",
-                        "Object-Oriented Programming (OOP)",
-                        "Database Management Systems",
-                        "REST API Engineering",
-                        "Git Version Control",
-                        "Problem Solving & Debugging",
-                      ].map((topic) => (
+                      {foundationTopics.map((topic) => (
                         <span
                           key={topic}
-                          className="px-3 py-1.5 rounded-lg bg-slate-900 text-slate-200 border border-slate-800 text-xs font-medium"
+                          className="px-3 py-1.5 rounded-xl bg-[#070A12] text-slate-200 border border-slate-800 text-xs font-medium hover:border-blue-500/40 hover:text-white transition-colors"
                         >
                           {topic}
                         </span>

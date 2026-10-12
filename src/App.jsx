@@ -9,11 +9,13 @@ import Experience from "./Component/Experience";
 import Contact from "./Component/Contact";
 import Footer from "./Component/Footer";
 import CinematicSection from "./Component/CinematicSection";
+import ToastProvider from "./Component/Toast";
 
 function App() {
   return (
-    <div className="min-h-screen bg-[#0A0E17] text-slate-100 flex flex-col selection:bg-blue-600 selection:text-white overflow-x-hidden">
-      <Navbar />
+    <ToastProvider>
+      <div className="min-h-screen bg-[#070A12] text-slate-100 flex flex-col selection:bg-blue-600 selection:text-white overflow-x-hidden relative font-sans">
+        <Navbar />
       
       {/* 3D Cinematic Directional Scroll Stage */}
       <main className="flex-1 relative w-full overflow-x-clip" style={{ perspective: "1400px" }}>
@@ -99,7 +101,8 @@ function App() {
       <div className="relative z-[80]">
         <Footer />
       </div>
-    </div>
+      </div>
+    </ToastProvider>
   );
 }
 

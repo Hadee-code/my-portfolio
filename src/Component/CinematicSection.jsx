@@ -123,93 +123,91 @@ export function CinematicSection({
       let glowOpacity = 0;
       let transformOrigin = "center center";
 
+      const isMobile = window.innerWidth < 768;
+
       // 1. Exiting State (Closing into Depth)
       if (currentExit > 0.001) {
         // Content sinks back with subtle zoom-out and blur
-        contentScale = 1 - currentExit * 0.08; // Subtle 1.0 -> 0.92
-        contentTZ = -currentExit * 140;
-        contentBlur = currentExit * 6; // Refined blur
-        contentBrightness = 1 - currentExit * 0.42;
-        borderRadius = currentExit * 30;
-        curtainOpacity = currentExit * 0.65;
+        contentScale = isMobile ? 1 : 1 - currentExit * 0.06;
+        contentTZ = isMobile ? 0 : -currentExit * 120;
+        contentBlur = isMobile ? 0 : currentExit * 4;
+        contentBrightness = 1 - currentExit * 0.35;
+        borderRadius = currentExit * 24;
+        curtainOpacity = currentExit * 0.6;
 
         // Background layer stays deeper and moves slower
-        bgScale = 1 - currentExit * 0.04;
-        bgTZ = -currentExit * 70;
+        bgScale = 1 - currentExit * 0.03;
+        bgTZ = isMobile ? 0 : -currentExit * 50;
 
-        switch (exitDirection) {
-          case "left-to-right":
-            transformOrigin = "right center";
-            contentTX = currentExit * 65;
-            rotateY = currentExit * 3.5;
-            bgTX = currentExit * 22; // Background moves at ~35% speed
-            break;
-          case "right-to-left":
-            transformOrigin = "left center";
-            contentTX = -currentExit * 65;
-            rotateY = -currentExit * 3.5;
-            bgTX = -currentExit * 22;
-            break;
-          case "bottom-to-top":
-            transformOrigin = "center top";
-            contentTY = -currentExit * 55;
-            rotateX = -currentExit * 3;
-            bgTY = -currentExit * 18;
-            break;
-          case "top-to-bottom":
-          default:
-            transformOrigin = "center bottom";
-            contentTY = currentExit * 70;
-            rotateX = currentExit * 3;
-            bgTY = currentExit * 24;
-            break;
+        if (!isMobile) {
+          switch (exitDirection) {
+            case "left-to-right":
+              transformOrigin = "right center";
+              contentTX = currentExit * 50;
+              rotateY = currentExit * 2.5;
+              bgTX = currentExit * 16;
+              break;
+            case "right-to-left":
+              transformOrigin = "left center";
+              contentTX = -currentExit * 50;
+              rotateY = -currentExit * 2.5;
+              bgTX = -currentExit * 16;
+              break;
+            case "bottom-to-top":
+              transformOrigin = "center top";
+              contentTY = -currentExit * 45;
+              rotateX = -currentExit * 2;
+              bgTY = -currentExit * 14;
+              break;
+            case "top-to-bottom":
+            default:
+              transformOrigin = "center bottom";
+              contentTY = currentExit * 50;
+              rotateX = currentExit * 2;
+              bgTY = currentExit * 16;
+              break;
+          }
         }
       }
       // 2. Entering State (Opening from Assigned Direction with Parallax & Blur-to-Sharp)
       else if (enableEnter && currentEnter < 0.999) {
         const invEnter = 1 - currentEnter;
 
-        // Subtle Zoom: scales from 0.96 in to 1.0
-        contentScale = 0.96 + currentEnter * 0.04;
+        // Subtle Zoom: scales from 0.97 in to 1.0
+        contentScale = isMobile ? 1 : 0.97 + currentEnter * 0.03;
+        contentBlur = isMobile ? 0 : invEnter * 3.5;
+        contentBrightness = 0.85 + currentEnter * 0.15;
+        glowOpacity = Math.sin(currentEnter * Math.PI) * 0.8;
+        bgScale = 1.03 - currentEnter * 0.03;
 
-        // Blur-to-Sharp: resolves from 5px down to 0px
-        contentBlur = invEnter * 5.2;
-
-        // Brightness elevation
-        contentBrightness = 0.8 + currentEnter * 0.2;
-
-        // Radiant glow peaks mid-transition
-        glowOpacity = Math.sin(currentEnter * Math.PI) * 0.9;
-
-        // Background subtle counter-zoom
-        bgScale = 1.04 - currentEnter * 0.04;
-
-        switch (enterDirection) {
-          case "left-to-right":
-            transformOrigin = "left center";
-            contentTX = -invEnter * 75; // Content moves 75px
-            rotateY = -invEnter * 4.5;  // 3D vault swing
-            bgTX = -invEnter * 24;      // Background moves at slower speed (24px)
-            break;
-          case "right-to-left":
-            transformOrigin = "right center";
-            contentTX = invEnter * 75;
-            rotateY = invEnter * 4.5;
-            bgTX = invEnter * 24;
-            break;
-          case "bottom-to-top":
-            transformOrigin = "center bottom";
-            contentTY = invEnter * 65;
-            rotateX = invEnter * 3.5;
-            bgTY = invEnter * 20;
-            break;
-          case "top-to-bottom":
-          default:
-            transformOrigin = "center top";
-            contentTY = -invEnter * 65;
-            rotateX = -invEnter * 3.5;
-            bgTY = -invEnter * 20;
-            break;
+        if (!isMobile) {
+          switch (enterDirection) {
+            case "left-to-right":
+              transformOrigin = "left center";
+              contentTX = -invEnter * 55;
+              rotateY = -invEnter * 3.5;
+              bgTX = -invEnter * 18;
+              break;
+            case "right-to-left":
+              transformOrigin = "right center";
+              contentTX = invEnter * 55;
+              rotateY = invEnter * 3.5;
+              bgTX = invEnter * 18;
+              break;
+            case "bottom-to-top":
+              transformOrigin = "center bottom";
+              contentTY = invEnter * 50;
+              rotateX = invEnter * 2.5;
+              bgTY = invEnter * 15;
+              break;
+            case "top-to-bottom":
+            default:
+              transformOrigin = "center top";
+              contentTY = -invEnter * 50;
+              rotateX = -invEnter * 2.5;
+              bgTY = -invEnter * 15;
+              break;
+          }
         }
       }
 
