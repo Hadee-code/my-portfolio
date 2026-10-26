@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { 
   ArrowUp, 
   Sparkles, 
@@ -6,17 +6,107 @@ import {
   Mail, 
   Phone, 
   MapPin, 
-  ArrowRight, 
-  Heart 
+  Clock, 
+  Send, 
+  CheckCircle2, 
+  Copy, 
+  Check, 
+  User, 
+  Tag, 
+  ArrowRight,
+  Heart
 } from "lucide-react";
 import { LinkedinIcon, GithubIcon } from "./SocialIcons";
 import profileData from "../data/profileData";
 import Reveal from "./Reveal";
 import { useToast } from "./ToastContext";
 
+const inquiryTypes = [
+  "Full-Time Role",
+  "Freelance Project",
+  "Technical Consultation",
+  "General Inquiry",
+];
+
 function Footer() {
   const { name, role, email, phone, location, socials, cvFile } = profileData;
   const { addToast } = useToast();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    inquiryType: "Full-Time Role",
+    subject: "",
+    message: "",
+  });
+
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [copiedPhone, setCopiedPhone] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  
+  // Real-time ticking clock for Lahore, Pakistan (PKT, UTC+5)
+  const [localTime, setLocalTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString("en-US", {
+        timeZone: "Asia/Karachi",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      });
+      setLocalTime(timeStr);
+    };
+
+    updateTime();
+    const timer = setInterval(updateTime, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSelectType = (type) => {
+    setFormData((prev) => ({ ...prev, inquiryType: type }));
+  };
+
+  const handleCopyEmail = (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(email);
+    setCopiedEmail(true);
+    addToast("Email copied to clipboard!", "success");
+    setTimeout(() => setCopiedEmail(false), 2500);
+  };
+
+  const handleCopyPhone = (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(phone);
+    setCopiedPhone(true);
+    addToast("Phone number copied to clipboard!", "success");
+    setTimeout(() => setCopiedPhone(false), 2500);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    setTimeout(() => {
+      setSubmitting(false);
+      setIsSubmitted(true);
+      addToast("Message dispatched successfully!", "success", 4000);
+      setFormData({
+        name: "",
+        email: "",
+        inquiryType: "Full-Time Role",
+        subject: "",
+        message: "",
+      });
+    }, 800);
+  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -28,215 +118,430 @@ function Footer() {
 
   const navLinks = [
     { name: "Home", href: "#home" },
-    { name: "Services", href: "#services" },
-    { name: "About Me", href: "#about" },
-    { name: "Skills", href: "#skills" },
-    { name: "Portfolio", href: "#portfolio" },
-    { name: "Journey", href: "#experience" },
-    { name: "Contact", href: "#contact" },
+    { name: "Profile", href: "#profile" },
+    { name: "Career", href: "#career" },
+    { name: "Showcase", href: "#showcase" },
+    { name: "Arsenal", href: "#arsenal" },
+    { name: "AI Lab", href: "#ai-lab" },
+    { name: "Education", href: "#education" },
   ];
 
-  const getSocialIcon = (name) => {
-    switch (name) {
+  const getSocialIcon = (sName) => {
+    switch (sName) {
       case "linkedin":
-        return <LinkedinIcon className="w-3.5 h-3.5" />;
+        return <LinkedinIcon className="w-4 h-4" />;
       case "github":
-        return <GithubIcon className="w-3.5 h-3.5" />;
+        return <GithubIcon className="w-4 h-4" />;
       case "email":
-        return <Mail className="w-3.5 h-3.5" />;
+        return <Mail className="w-4 h-4" />;
       case "phone":
-        return <Phone className="w-3.5 h-3.5" />;
+        return <Phone className="w-4 h-4" />;
       default:
-        return <ArrowRight className="w-3.5 h-3.5" />;
+        return <ArrowRight className="w-4 h-4" />;
     }
   };
 
   return (
-    <footer className="w-full bg-[#05070D] text-slate-300 relative border-t border-slate-800">
+    <footer id="footer" className="w-full bg-[#EAEAEA] text-[#111111] relative border-t border-black/[0.08] overflow-hidden">
       
-      {/* High-Visibility Radiant Top Glowing Separator Line */}
-      <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
+      {/* Top Accent Line */}
+      <div className="w-full h-[1px] bg-black/[0.08]" />
 
-      {/* Pre-Footer Action Banner */}
-      <div className="w-full max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 pt-16 pb-12">
-        <Reveal direction="up" delay={100}>
-          <div className="bg-gradient-to-r from-[#0C1222] via-[#101930] to-[#0C1222] rounded-3xl p-8 sm:p-12 border border-slate-700/80 shadow-2xl relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8">
-            <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Main Consolidated Contact & Inquiries Section */}
+      <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 pt-20 pb-16">
+        
+        {/* Section Heading & Invitation */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <Reveal direction="down" delay={100}>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] mb-3.5 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-[#111111]" />
+              <span className="text-[#111111] text-xs font-bold uppercase tracking-wider">08 / Contact & Opportunities</span>
+            </div>
+          </Reveal>
+          
+          <Reveal direction="clip-up" delay={200}>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#111111]">
+              Let's Discuss Professional <span className="font-light italic text-zinc-500">Opportunities</span>
+            </h2>
+          </Reveal>
+
+          <Reveal direction="up" delay={300}>
+            <p className="text-zinc-600 text-sm sm:text-base mt-4 leading-relaxed font-normal">
+              Open for full-time engineering roles, technical contracts, and collaboration on high-performance web systems and AI workflows. Let's start a conversation.
+            </p>
+          </Reveal>
+        </div>
+
+        {/* 2-Column Consolidated Contact Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-16 items-start">
+          
+          {/* Left Column: Direct Channels, Status & CV Download */}
+          <Reveal direction="left" delay={200} className="lg:col-span-5 space-y-4">
             
-            <div className="text-center lg:text-left max-w-xl">
-              <span className="text-blue-400 text-xs font-bold uppercase tracking-wider bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-                Let's Build Together
-              </span>
-              <h3 className="text-white text-2xl sm:text-3xl font-black mt-3 mb-2">
-                Ready to Bring Your Vision to Life?
-              </h3>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-normal">
-                Looking for a dedicated Junior MERN Stack Developer for your engineering team or upcoming product? Let's connect today.
+            {/* Status Card */}
+            <div className="bg-white border border-black/[0.08] rounded-3xl p-6 shadow-sm relative overflow-hidden">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
+                  </span>
+                  <span className="text-[#111111] font-bold text-sm">Available for Impact</span>
+                </div>
+                <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                  FAST RESPONSE
+                </span>
+              </div>
+              <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed font-normal">
+                Currently taking inquiries for full-stack engineering roles (MERN, Next.js, PostgreSQL) and forward-looking AI engineering projects.
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-3.5 shrink-0">
-              <a
-                href="#contact"
-                className="bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 text-white font-bold px-7 py-3.5 rounded-xl text-sm hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-blue-500/30 flex items-center gap-2 group"
-              >
-                <Sparkles className="w-4 h-4 text-cyan-200" />
-                <span>Get In Touch</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </a>
-
-              <a
-                href={cvFile}
-                download="Muhammad_Hadee_Butt_CV.pdf"
-                onClick={handleDownloadCV}
-                className="border border-slate-700 bg-slate-900/90 text-white font-semibold px-7 py-3.5 rounded-xl text-sm hover:border-blue-500 hover:text-blue-400 transition-all flex items-center gap-2"
-              >
-                <Download className="w-4 h-4 text-blue-400" />
-                <span>Download CV</span>
-              </a>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-
-      {/* Main Footer Content */}
-      <div className="w-full max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 pt-8 pb-14">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-slate-800/80">
-          
-          {/* Brand Info */}
-          <div className="space-y-4">
-            <a href="#home" className="inline-flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 p-[1.5px] shadow-md shadow-blue-500/20">
-                <div className="w-full h-full bg-[#0B101E] rounded-[10px] flex items-center justify-center">
-                  <span className="text-xs font-black tracking-tighter text-blue-400">
-                    HB
-                  </span>
+            {/* Email Card with One-Click Copy */}
+            <div className="group bg-white border border-black/[0.08] hover:border-black/30 rounded-3xl p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-[0_12px_28px_rgba(0,0,0,0.05)] flex items-center justify-between">
+              <div className="flex items-center gap-4 overflow-hidden">
+                <div className="w-11 h-11 rounded-2xl bg-[#111111] flex items-center justify-center text-white shadow-xs shrink-0">
+                  <Mail className="w-5 h-5" />
                 </div>
-              </div>
-              <span className="text-2xl font-black text-white group-hover:text-blue-400 transition-colors">
-                Hadee<span className="text-blue-500">.</span>
-              </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                Dev
-              </span>
-            </a>
-            
-            <p className="text-slate-300 text-sm leading-relaxed font-normal">
-              {role} specializing in MERN stack web applications, Next.js, RESTful microservices, and modern database systems.
-            </p>
-
-            <div className="flex items-center gap-2 text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20 w-fit">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              <span>Available for Hire & Contracting</span>
-            </div>
-          </div>
-
-          {/* Quick Navigation Links */}
-          <div>
-            <p className="text-white text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-blue-500 pl-3">
-              Quick Navigation
-            </p>
-            <ul className="space-y-2.5">
-              {navLinks.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-xs sm:text-sm text-slate-300 hover:text-blue-400 hover:translate-x-1 inline-block transition-all font-medium"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Direct Contact Info */}
-          <div>
-            <p className="text-white text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-blue-500 pl-3">
-              Direct Contact
-            </p>
-            <ul className="space-y-3.5 text-xs sm:text-sm">
-              <li className="flex items-start gap-2.5">
-                <Mail className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                <div>
-                  <span className="block text-slate-400 text-xs font-semibold">Email</span>
+                <div className="overflow-hidden">
+                  <p className="text-zinc-500 text-[11px] uppercase tracking-wider font-bold">Email Address</p>
                   <a
                     href={`mailto:${email}`}
-                    className="text-slate-200 hover:text-blue-400 transition-colors font-medium break-all"
+                    className="text-[#111111] font-bold text-sm sm:text-base hover:text-black transition-colors truncate block"
                   >
                     {email}
                   </a>
                 </div>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <Phone className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-                <div>
-                  <span className="block text-slate-400 text-xs font-semibold">Phone</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                className="p-2.5 rounded-full bg-[#F8F8F9] border border-black/[0.08] text-zinc-700 hover:text-black hover:border-black/30 transition shrink-0 cursor-pointer active:scale-95 shadow-xs"
+                title="Copy email to clipboard"
+              >
+                {copiedEmail ? (
+                  <Check className="w-4 h-4 text-emerald-600" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
+              </button>
+            </div>
+
+            {/* Phone Card with One-Click Copy */}
+            <div className="group bg-white border border-black/[0.08] hover:border-black/30 rounded-3xl p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-[0_12px_28px_rgba(0,0,0,0.05)] flex items-center justify-between">
+              <div className="flex items-center gap-4 overflow-hidden">
+                <div className="w-11 h-11 rounded-2xl bg-[#111111] flex items-center justify-center text-white shadow-xs shrink-0">
+                  <Phone className="w-5 h-5" />
+                </div>
+                <div className="overflow-hidden">
+                  <p className="text-zinc-500 text-[11px] uppercase tracking-wider font-bold">Phone / WhatsApp</p>
                   <a
                     href={`tel:${phone}`}
-                    className="text-slate-200 hover:text-blue-400 transition-colors font-medium"
+                    className="text-[#111111] font-bold text-sm sm:text-base hover:text-black transition-colors truncate block"
                   >
                     {phone}
                   </a>
                 </div>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                <div>
-                  <span className="block text-slate-400 text-xs font-semibold">Location</span>
-                  <span className="text-slate-200 font-medium">{location}</span>
-                </div>
-              </li>
-            </ul>
-          </div>
+              </div>
 
-          {/* Social Profiles & Back To Top */}
-          <div className="flex flex-col justify-between">
-            <div>
-              <p className="text-white text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-blue-500 pl-3">
-                Social Profiles
-              </p>
-              <div className="flex flex-wrap gap-2 mb-6">
+              <button
+                type="button"
+                onClick={handleCopyPhone}
+                className="p-2.5 rounded-full bg-[#F8F8F9] border border-black/[0.08] text-zinc-700 hover:text-black hover:border-black/30 transition shrink-0 cursor-pointer active:scale-95 shadow-xs"
+                title="Copy phone to clipboard"
+              >
+                {copiedPhone ? (
+                  <Check className="w-4 h-4 text-emerald-600" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
+              </button>
+            </div>
+
+            {/* Location & Live Ticking Clock Card */}
+            <div className="bg-white border border-black/[0.08] rounded-3xl p-5 sm:p-6 shadow-sm flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-11 h-11 rounded-2xl bg-[#111111] flex items-center justify-center text-white shadow-xs shrink-0">
+                  <MapPin className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-zinc-500 text-[11px] uppercase tracking-wider font-bold">Location</p>
+                  <p className="text-[#111111] font-bold text-sm sm:text-base">
+                    {location}
+                  </p>
+                </div>
+              </div>
+
+              <div className="text-right">
+                <div className="flex items-center gap-1.5 text-xs text-zinc-600 font-bold justify-end font-mono-code">
+                  <Clock className="w-3.5 h-3.5 text-zinc-500" />
+                  <span>PKT (UTC+5)</span>
+                </div>
+                <p className="text-xs text-zinc-800 font-mono-code mt-0.5 font-bold">
+                  {localTime || "12:00 PM"}
+                </p>
+              </div>
+            </div>
+
+            {/* Social Profiles & Download CV Action Row */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+              <a
+                href={cvFile}
+                download="Muhammad_Hadee_Butt_CV.pdf"
+                onClick={handleDownloadCV}
+                className="w-full sm:w-auto flex-1 bg-[#111111] text-white font-semibold px-6 py-3.5 rounded-2xl text-xs sm:text-sm hover:bg-neutral-800 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2"
+              >
+                <Download className="w-4 h-4 text-zinc-300" />
+                <span>Download Résumé (PDF)</span>
+              </a>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-center">
                 {socials.map((s) => (
                   <a
                     key={s.name}
                     href={s.url}
-                    target={s.url.startsWith("http") ? "_blank" : undefined}
-                    rel={s.url.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="px-3.5 py-2 rounded-xl bg-[#0F172A] border border-slate-800 hover:border-blue-500 text-slate-200 hover:text-blue-400 text-xs font-semibold transition-all shadow-sm flex items-center gap-1.5 hover:-translate-y-0.5"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3.5 rounded-2xl bg-white border border-black/[0.08] hover:border-black/30 text-zinc-700 hover:text-black transition-all shadow-xs hover:-translate-y-0.5"
+                    title={s.label}
                   >
                     {getSocialIcon(s.name)}
-                    <span>{s.label}</span>
                   </a>
                 ))}
               </div>
             </div>
 
-            <div>
-              <button
-                onClick={scrollToTop}
-                className="w-full bg-[#0F172A] border border-slate-700/80 hover:border-blue-500 text-slate-200 hover:text-blue-400 py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:-translate-y-0.5"
-              >
-                <span>Back to Top</span>
-                <ArrowUp className="w-4 h-4 text-blue-400" />
-              </button>
+          </Reveal>
+
+          {/* Right Column: Direct Message Form */}
+          <Reveal direction="right" delay={300} className="lg:col-span-7">
+            <div className="bg-white border border-black/[0.08] rounded-3xl p-7 sm:p-9 shadow-sm">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-display text-[#111111] text-2xl font-bold">Send a Direct Message</h3>
+                <Sparkles className="w-5 h-5 text-zinc-600" />
+              </div>
+              
+              <p className="text-zinc-600 text-sm mb-7 font-normal">
+                Leave your project scope or recruitment details below and I will review and reply within 24 hours.
+              </p>
+
+              {isSubmitted ? (
+                <div className="bg-[#F8F8F9] border border-black/[0.08] rounded-2xl p-8 text-center animate-fadeIn">
+                  <div className="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle2 className="w-7 h-7" />
+                  </div>
+                  <h4 className="font-display text-[#111111] font-bold text-xl mb-1.5">Message Dispatched!</h4>
+                  <p className="text-zinc-600 text-sm mb-6 max-w-sm mx-auto">
+                    Thank you for reaching out. Your inquiry has been received and I will reply via email shortly.
+                  </p>
+                  <button
+                    onClick={() => setIsSubmitted(false)}
+                    className="px-5 py-2.5 rounded-full bg-[#111111] text-white text-xs font-bold hover:bg-neutral-800 transition cursor-pointer shadow-xs"
+                  >
+                    Send another message
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  
+                  {/* Inquiry Category Pills */}
+                  <div>
+                    <label className="block text-zinc-500 text-xs font-bold uppercase tracking-wider mb-2.5">
+                      Inquiry Category
+                    </label>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      {inquiryTypes.map((type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          onClick={() => handleSelectType(type)}
+                          className={`py-2 px-3 rounded-xl text-xs font-semibold transition text-center cursor-pointer border ${
+                            formData.inquiryType === type
+                              ? "bg-[#111111] text-white border-[#111111] shadow-xs"
+                              : "bg-[#F8F8F9] text-zinc-700 border-black/[0.08] hover:border-black/30 hover:bg-white"
+                          }`}
+                        >
+                          {type}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Name & Email Row */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-zinc-500 text-xs font-bold uppercase tracking-wider mb-2">
+                        Your Name
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400">
+                          <User className="w-4 h-4" />
+                        </div>
+                        <input
+                          type="text"
+                          name="name"
+                          required
+                          value={formData.name}
+                          onChange={handleChange}
+                          placeholder="e.g. Alex Henderson"
+                          className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-zinc-500 text-xs font-bold uppercase tracking-wider mb-2">
+                        Email Address
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400">
+                          <Mail className="w-4 h-4" />
+                        </div>
+                        <input
+                          type="email"
+                          name="email"
+                          required
+                          value={formData.email}
+                          onChange={handleChange}
+                          placeholder="e.g. alex@company.com"
+                          className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Subject Input */}
+                  <div>
+                    <label className="block text-zinc-500 text-xs font-bold uppercase tracking-wider mb-2">
+                      Subject
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400">
+                        <Tag className="w-4 h-4" />
+                      </div>
+                      <input
+                        type="text"
+                        name="subject"
+                        required
+                        value={formData.subject}
+                        onChange={handleChange}
+                        placeholder="e.g. Full Stack Developer Opening — Tech Team"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Message Textarea */}
+                  <div>
+                    <label className="block text-zinc-500 text-xs font-bold uppercase tracking-wider mb-2">
+                      Message Details
+                    </label>
+                    <textarea
+                      name="message"
+                      rows={4}
+                      required
+                      value={formData.message}
+                      onChange={handleChange}
+                      placeholder="Share details about the role, technical requirements, timeline, or questions..."
+                      className="w-full p-4 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition resize-none"
+                    />
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full py-3.5 rounded-full bg-[#111111] hover:bg-neutral-800 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm active:scale-[0.99] disabled:opacity-50"
+                  >
+                    {submitting ? (
+                      <span className="flex items-center gap-2">
+                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Transmitting...</span>
+                      </span>
+                    ) : (
+                      <>
+                        <span>Send Message</span>
+                        <Send className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+
+                </form>
+              )}
             </div>
+          </Reveal>
+
+        </div>
+
+        {/* Bottom Quick Navigation & Brand Strip */}
+        <div className="pt-10 border-t border-black/[0.08] grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          
+          {/* Brand info */}
+          <div className="md:col-span-4 flex items-center gap-3">
+            <a href="#home" className="inline-flex items-center gap-2.5 group">
+              <div className="w-9 h-9 rounded-xl bg-[#111111] text-white flex items-center justify-center transition-transform group-hover:scale-105 duration-200">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-5 h-5"
+                >
+                  <polygon points="12 2 4 9 7 19 12 16 17 19 20 9 12 2" />
+                  <polyline points="9 11 12 13 15 11" />
+                </svg>
+              </div>
+              <span className="font-display text-2xl font-extrabold text-[#111111]">
+                Hadee<span className="text-zinc-500">.</span>
+              </span>
+            </a>
+            <span className="text-xs text-zinc-500 font-medium">
+              — {role}
+            </span>
+          </div>
+
+          {/* Nav links */}
+          <div className="md:col-span-6 flex flex-wrap items-center justify-start md:justify-center gap-4 text-xs font-semibold text-zinc-600">
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                className="hover:text-black transition-colors"
+              >
+                {link.name}
+              </a>
+            ))}
+          </div>
+
+          {/* Back to top */}
+          <div className="md:col-span-2 flex justify-start md:justify-end">
+            <button
+              onClick={scrollToTop}
+              className="px-4 py-2 rounded-full bg-white border border-black/[0.1] hover:border-black/30 text-zinc-800 hover:text-black text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer hover:-translate-y-0.5"
+            >
+              <span>Top</span>
+              <ArrowUp className="w-3.5 h-3.5" />
+            </button>
           </div>
 
         </div>
 
-        {/* Bottom Copyright & Tech Stack Info */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        {/* Copyright */}
+        <div className="pt-6 mt-6 border-t border-black/[0.05] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-500">
           <p>
-            © {new Date().getFullYear()} <span className="text-white font-bold">{name}</span>. All rights reserved.
+            © {new Date().getFullYear()} <span className="text-[#111111] font-bold">{name}</span>. All rights reserved.
           </p>
 
-          <p className="flex items-center gap-1.5 text-slate-400">
+          <p className="flex items-center gap-1.5 text-zinc-500">
             <span>Crafted with</span>
             <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 inline" />
-            <span>using <strong className="text-blue-400 font-semibold">React 19 & Tailwind CSS v4</strong></span>
+            <span>using <strong className="text-zinc-800 font-semibold">React 19 & Tailwind CSS v4</strong></span>
           </p>
         </div>
+
       </div>
     </footer>
   );

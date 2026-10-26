@@ -20,7 +20,8 @@ function Navbar() {
         setScrollProgress(progress);
       }
 
-      const sections = ["home", "services", "about", "skills", "portfolio", "experience", "contact"];
+      // Exact 7 sections in order + footer
+      const sections = ["home", "profile", "career", "showcase", "arsenal", "ai-lab", "education", "footer"];
       const scrollPosition = window.scrollY + 140;
 
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -42,12 +43,12 @@ function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "#home", id: "home" },
-    { name: "Services", href: "#services", id: "services" },
-    { name: "About", href: "#about", id: "about" },
-    { name: "Skills", href: "#skills", id: "skills" },
-    { name: "Portfolio", href: "#portfolio", id: "portfolio" },
-    { name: "Journey", href: "#experience", id: "experience" },
-    { name: "Contact", href: "#contact", id: "contact" },
+    { name: "Profile", href: "#profile", id: "profile" },
+    { name: "Career", href: "#career", id: "career" },
+    { name: "Showcase", href: "#showcase", id: "showcase" },
+    { name: "Arsenal", href: "#arsenal", id: "arsenal" },
+    { name: "AI Lab", href: "#ai-lab", id: "ai-lab" },
+    { name: "Education", href: "#education", id: "education" },
   ];
 
   const handleDownloadCV = () => {
@@ -58,57 +59,60 @@ function Navbar() {
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         scrolled
-          ? "bg-[#070A12]/85 backdrop-blur-xl border-b border-slate-800/80 shadow-2xl shadow-black/50"
-          : "bg-transparent border-b border-slate-800/30"
+          ? "bg-[#F3F3F3]/90 backdrop-blur-md border-b border-black/[0.08] shadow-[0_2px_12px_rgba(0,0,0,0.04)]"
+          : "bg-transparent border-b border-black/[0.05]"
       }`}
     >
-      {/* Radiant Top Reading Scroll Progress Bar */}
+      {/* Editorial Reading Scroll Progress Bar */}
       <div
-        className="absolute top-0 left-0 h-[2.5px] bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 shadow-[0_0_14px_rgba(59,130,246,0.9)] transition-all duration-100 ease-out z-50 pointer-events-none"
+        className="absolute top-0 left-0 h-[2px] bg-[#111111] transition-all duration-100 ease-out z-50 pointer-events-none"
         style={{ width: `${scrollProgress}%` }}
       />
 
-      <div className="w-full max-w-[1440px] mx-auto h-[72px] flex items-center justify-between px-6 md:px-10 lg:px-16">
+      <div className="w-full max-w-[1400px] mx-auto h-[76px] flex items-center justify-between px-6 md:px-12 lg:px-16">
         
-        {/* Brand Monogram & Name */}
+        {/* Brand Monogram & Minimalist Geometric Icon */}
         <div className="flex items-center gap-3">
-          <a href="#home" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 p-[1.5px] shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all duration-300">
-              <div className="w-full h-full bg-[#0B101E] rounded-[10px] flex items-center justify-center">
-                <span className="text-sm font-black tracking-tighter bg-gradient-to-tr from-blue-400 to-cyan-300 bg-clip-text text-transparent">
-                  HB
-                </span>
-              </div>
+          <a href="#home" className="flex items-center gap-3 group">
+            {/* Minimal Geometric Emblem Mark matching reference */}
+            <div className="w-9 h-9 rounded-xl bg-[#111111] text-white flex items-center justify-center transition-transform group-hover:scale-105 duration-200 shadow-sm">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-5 h-5"
+              >
+                <polygon points="12 2 4 9 7 19 12 16 17 19 20 9 12 2" />
+                <polyline points="9 11 12 13 15 11" />
+              </svg>
             </div>
             
             <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xl font-extrabold tracking-tight text-white group-hover:text-blue-400 transition-colors">
-                  Hadee<span className="text-blue-500">.</span>
-                </span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                  Dev
-                </span>
-              </div>
-              <span className="text-[10px] text-slate-400 font-medium tracking-wide hidden sm:block">
-                Full-Stack Engineer
+              <span className="font-display text-base font-extrabold tracking-tight text-[#111111] group-hover:text-neutral-600 transition-colors">
+                Hadee<span className="text-zinc-500">.</span>
+              </span>
+              <span className="text-[10px] text-zinc-500 font-medium tracking-wider uppercase hidden sm:block">
+                Full-Stack
               </span>
             </div>
           </a>
         </div>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1 bg-[#0F172A]/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-800/80 shadow-inner">
+        <nav className="hidden lg:flex items-center gap-1 bg-white/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-black/[0.08] shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
           {navLinks.map((link) => {
             const isActive = activeSection === link.id;
             return (
               <a
                 key={link.id}
                 href={link.href}
-                className={`text-xs font-semibold px-4 py-2 rounded-full transition-all duration-200 relative ${
+                className={`text-[13px] font-medium px-4 py-1.5 rounded-full transition-all duration-200 relative ${
                   isActive
-                    ? "text-white bg-blue-600 shadow-md shadow-blue-500/30"
-                    : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+                    ? "text-white bg-[#111111] shadow-sm font-semibold"
+                    : "text-zinc-600 hover:text-[#111111] hover:bg-black/[0.04]"
                 }`}
               >
                 {link.name}
@@ -125,31 +129,39 @@ function Navbar() {
             href={profileData.cvFile}
             download="Muhammad_Hadee_Butt_CV.pdf"
             onClick={handleDownloadCV}
-            className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 bg-slate-900/80 border border-slate-800 hover:border-blue-500/60 hover:text-blue-400 transition-all duration-200"
+            className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium text-zinc-700 bg-white border border-black/[0.1] hover:border-black/30 hover:text-black transition-all duration-200 shadow-sm"
           >
-            <Download className="w-3.5 h-3.5 text-blue-400" />
+            <Download className="w-3.5 h-3.5 text-zinc-600" />
             <span>CV</span>
           </a>
 
-          {/* Hire Me CTA Button */}
+          {/* Book A Call / Contact CTA Button pointing to #footer */}
           <a
-            href="#contact"
-            className="hidden sm:inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs hover:brightness-110 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 shadow-lg shadow-blue-600/30 group"
+            href="#footer"
+            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full text-[#111111] hover:text-black hover:bg-black/[0.05] transition-all duration-200 group border border-transparent hover:border-black/10"
           >
-            <Sparkles className="w-3.5 h-3.5 text-cyan-200" />
-            <span>Hire Me</span>
+            <span>Book A Call</span>
             <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </a>
+
+          {/* Primary Filled CTA Button pointing to #footer */}
+          <a
+            href="#footer"
+            className="hidden sm:inline-flex items-center gap-1.5 bg-[#111111] text-white font-semibold px-5 py-2 rounded-full text-xs hover:bg-neutral-800 active:scale-95 transition-all duration-200 shadow-sm group"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <span>Hire Me</span>
           </a>
 
           {/* Mobile Hamburger Button */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 hover:text-blue-400 hover:border-blue-500/50 transition cursor-pointer"
+            className="lg:hidden p-2 rounded-full bg-white border border-black/[0.1] text-zinc-800 hover:text-black hover:border-black/30 transition cursor-pointer shadow-sm"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? (
-              <X className="w-5 h-5 text-blue-400" />
+              <X className="w-5 h-5" />
             ) : (
               <Menu className="w-5 h-5" />
             )}
@@ -159,15 +171,15 @@ function Navbar() {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#0A0F1D]/98 backdrop-blur-2xl border-b border-slate-800 px-6 py-5 shadow-2xl animate-fadeIn">
+        <div className="lg:hidden bg-white/98 backdrop-blur-2xl border-b border-black/[0.08] px-6 py-6 shadow-xl animate-fadeIn">
           
           {/* Status pill in mobile drawer */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-4">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium mb-4 w-fit">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
             <span>Available for Full-time Roles & Contracts</span>
           </div>
 
-          <nav className="flex flex-col gap-1.5">
+          <nav className="flex flex-col gap-1">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
               return (
@@ -175,10 +187,10 @@ function Navbar() {
                   key={link.id}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`py-2.5 px-4 rounded-xl text-sm font-semibold transition flex items-center justify-between ${
+                  className={`py-2.5 px-4 rounded-xl text-sm transition flex items-center justify-between ${
                     isActive
-                      ? "text-white bg-blue-600 shadow-md shadow-blue-500/25"
-                      : "text-slate-300 hover:text-blue-400 hover:bg-slate-800/50"
+                      ? "text-white bg-[#111111] font-semibold shadow-sm"
+                      : "text-zinc-700 hover:text-black hover:bg-black/[0.04]"
                   }`}
                 >
                   <span>{link.name}</span>
@@ -187,7 +199,7 @@ function Navbar() {
               );
             })}
 
-            <div className="pt-3 mt-2 border-t border-slate-800/80 flex flex-col gap-2.5">
+            <div className="pt-4 mt-3 border-t border-black/[0.08] flex flex-col gap-2.5">
               <a
                 href={profileData.cvFile}
                 download="Muhammad_Hadee_Butt_CV.pdf"
@@ -195,19 +207,20 @@ function Navbar() {
                   setMobileMenuOpen(false);
                   handleDownloadCV();
                 }}
-                className="w-full text-center py-2.5 rounded-xl text-xs font-bold text-slate-200 bg-slate-900 border border-slate-800 flex items-center justify-center gap-2"
+                className="w-full text-center py-2.5 rounded-xl text-xs font-semibold text-zinc-800 bg-[#F3F3F3] border border-black/[0.08] flex items-center justify-center gap-2"
               >
-                <Download className="w-4 h-4 text-blue-400" />
+                <Download className="w-4 h-4 text-zinc-600" />
                 <span>Download CV (PDF)</span>
               </a>
 
               <a
-                href="#contact"
+                href="#footer"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 text-white py-3 rounded-xl text-xs font-bold shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2"
+                className="w-full text-center bg-[#111111] text-white py-3 rounded-xl text-xs font-semibold shadow-md flex items-center justify-center gap-2"
               >
-                <Sparkles className="w-4 h-4 text-cyan-200" />
-                <span>Hire Me Now</span>
+                <Sparkles className="w-4 h-4 text-amber-300" />
+                <span>Book A Call / Hire Me</span>
+                <ArrowUpRight className="w-4 h-4" />
               </a>
             </div>
           </nav>

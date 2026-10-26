@@ -26,30 +26,26 @@ function Experience() {
   ];
 
   return (
-    <section id="experience" className="w-full bg-[#0A0F1D] px-6 md:px-10 lg:px-16 py-24 border-t border-slate-800/80 relative overflow-hidden bg-lines-pattern">
-      {/* Background Ambient Glows */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-600/8 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-indigo-600/8 rounded-full blur-[140px] pointer-events-none" />
-
-      <div className="w-full max-w-[1440px] mx-auto relative z-10">
+    <section id="experience" className="w-full bg-[#F3F3F3] text-[#111111] px-6 md:px-12 lg:px-16 py-24 border-t border-black/[0.06] relative overflow-hidden bg-lines-pattern">
+      <div className="w-full max-w-[1400px] mx-auto relative z-10">
         
         {/* Section Heading */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <Reveal direction="down" delay={100}>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 mb-3.5 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-              <span className="text-blue-400 text-xs font-bold uppercase tracking-wider">Career Trajectory</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] mb-3.5 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-[#111111]" />
+              <span className="text-[#111111] text-xs font-bold uppercase tracking-wider">Career Trajectory</span>
             </div>
           </Reveal>
           
           <Reveal direction="clip-up" delay={200}>
-            <h2 className="text-white text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
-              Experience & <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">Education</span>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#111111]">
+              Experience & <span className="font-light italic text-zinc-500">Education</span>
             </h2>
           </Reveal>
 
           <Reveal direction="up" delay={300}>
-            <p className="text-slate-300 text-sm sm:text-base mt-4 leading-relaxed font-normal">
+            <p className="text-zinc-600 text-sm sm:text-base mt-4 leading-relaxed font-normal">
               Hands-on engineering contributions in fast-moving dev environments paired with formal computer science education.
             </p>
           </Reveal>
@@ -61,67 +57,67 @@ function Experience() {
           <Reveal direction="left" delay={200}>
             <div>
               <div className="flex items-center gap-3.5 mb-8">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                <div className="w-11 h-11 rounded-2xl bg-[#111111] flex items-center justify-center text-white shadow-sm">
                   <Briefcase className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-white text-2xl font-black">Work Experience</h3>
-                  <p className="text-slate-400 text-xs uppercase tracking-wider font-semibold">Professional Engineering Roles</p>
+                  <h3 className="font-display text-[#111111] text-2xl font-bold">Work Experience</h3>
+                  <p className="text-zinc-500 text-xs uppercase tracking-wider font-semibold">Professional Engineering Roles</p>
                 </div>
               </div>
 
-              <div className="relative border-l-2 border-blue-500/30 pl-6 sm:pl-8 ml-4 space-y-8">
+              <div className="relative border-l-2 border-black/[0.12] pl-6 sm:pl-8 ml-4 space-y-8">
                 {experience.map((job, idx) => (
                   <div key={idx} className="relative group">
-                    {/* Timeline Node with Pulsing Ring */}
-                    <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#070A12] border-2 border-blue-500 group-hover:bg-blue-500 group-hover:scale-125 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.9)] transition-all duration-300" />
+                    {/* Timeline Node with Hover Ring */}
+                    <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-white border-2 border-[#111111] group-hover:bg-[#111111] group-hover:scale-125 transition-all duration-300 shadow-sm" />
 
-                    <div className="bg-[#0F172A]/75 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-slate-800/90 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-500 ease-out shadow-xl">
+                    <div className="bg-white rounded-3xl p-6 sm:p-8 border border-black/[0.08] hover:border-black/30 hover:shadow-[0_16px_36px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 ease-out shadow-sm">
                       
                       {/* Top Badges */}
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold px-3 py-1 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center gap-1.5">
-                            <Calendar className="w-3.5 h-3.5" />
+                          <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#F3F3F3] text-zinc-700 border border-black/[0.06] flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5 text-zinc-500" />
                             <span>{job.period}</span>
                           </span>
-                          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                             <span>{job.type}</span>
                           </span>
                         </div>
 
-                        <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
-                          <MapPin className="w-3.5 h-3.5 text-rose-400" />
+                        <span className="text-xs text-zinc-500 font-medium flex items-center gap-1">
+                          <MapPin className="w-3.5 h-3.5 text-zinc-400" />
                           <span>{job.location}</span>
                         </span>
                       </div>
 
-                      <h4 className="text-white text-xl sm:text-2xl font-black mt-2">{job.role}</h4>
+                      <h4 className="font-display text-[#111111] text-xl sm:text-2xl font-bold mt-2">{job.role}</h4>
                       
-                      <div className="flex items-center gap-2 text-blue-400 text-sm font-bold mb-4">
-                        <Building2 className="w-4 h-4 text-blue-400" />
+                      <div className="flex items-center gap-2 text-zinc-800 text-sm font-semibold mb-4">
+                        <Building2 className="w-4 h-4 text-zinc-500" />
                         <span>{job.company}</span>
                       </div>
 
-                      <p className="text-slate-300 text-sm leading-relaxed mb-6 font-normal">
+                      <p className="text-zinc-600 text-sm leading-relaxed mb-6 font-normal">
                         {job.description}
                       </p>
 
                       {/* Highlights */}
-                      <div className="space-y-3 pt-4 border-t border-slate-800">
+                      <div className="space-y-3 pt-4 border-t border-black/[0.06]">
                         {job.highlights.map((item, hIdx) => (
-                          <div key={hIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-300">
-                            <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+                          <div key={hIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-zinc-700">
+                            <CheckCircle2 className="w-4 h-4 text-zinc-900 shrink-0 mt-0.5" />
                             <span>{item}</span>
                           </div>
                         ))}
                       </div>
 
                       {/* Tech Chips */}
-                      <div className="mt-6 pt-4 border-t border-slate-800 flex flex-wrap gap-1.5">
+                      <div className="mt-6 pt-4 border-t border-black/[0.06] flex flex-wrap gap-1.5">
                         {["MERN Stack", "React 19", "Next.js", "Node.js", "Express", "MongoDB", "PostgreSQL", "JWT", "Git"].map((t) => (
-                          <span key={t} className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-[#070A12] text-slate-300 border border-slate-800">
+                          <span key={t} className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-[#F8F8F9] text-zinc-700 border border-black/[0.06]">
                             {t}
                           </span>
                         ))}
@@ -138,51 +134,51 @@ function Experience() {
           <Reveal direction="right" delay={300}>
             <div>
               <div className="flex items-center gap-3.5 mb-8">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-cyan-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
+                <div className="w-11 h-11 rounded-2xl bg-[#111111] flex items-center justify-center text-white shadow-sm">
                   <GraduationCap className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-white text-2xl font-black">Education</h3>
-                  <p className="text-slate-400 text-xs uppercase tracking-wider font-semibold">Academic Foundation</p>
+                  <h3 className="font-display text-[#111111] text-2xl font-bold">Education</h3>
+                  <p className="text-zinc-500 text-xs uppercase tracking-wider font-semibold">Academic Foundation</p>
                 </div>
               </div>
 
-              <div className="relative border-l-2 border-blue-500/30 pl-6 sm:pl-8 ml-4 space-y-8">
+              <div className="relative border-l-2 border-black/[0.12] pl-6 sm:pl-8 ml-4 space-y-8">
                 {education.map((edu, idx) => (
                   <div key={idx} className="relative group">
                     {/* Timeline Node */}
-                    <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#070A12] border-2 border-blue-500 group-hover:bg-blue-500 group-hover:scale-125 group-hover:shadow-[0_0_12px_rgba(59,130,246,0.8)] transition-all duration-300" />
+                    <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-white border-2 border-[#111111] group-hover:bg-[#111111] group-hover:scale-125 transition-all duration-300 shadow-sm" />
 
-                    <div className="bg-[#0F172A]/75 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-slate-800/90 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-500 ease-out shadow-xl">
+                    <div className="bg-white rounded-3xl p-6 sm:p-8 border border-black/[0.08] hover:border-black/30 hover:shadow-[0_16px_36px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 ease-out shadow-sm">
                       
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                        <span className="text-xs font-bold px-3 py-1 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5" />
+                        <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#F3F3F3] text-zinc-700 border border-black/[0.06] flex items-center gap-1.5">
+                          <Calendar className="w-3.5 h-3.5 text-zinc-500" />
                           <span>{edu.period}</span>
                         </span>
-                        <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
-                          <MapPin className="w-3.5 h-3.5 text-rose-400" />
+                        <span className="text-xs text-zinc-500 font-medium flex items-center gap-1">
+                          <MapPin className="w-3.5 h-3.5 text-zinc-400" />
                           <span>{edu.location}</span>
                         </span>
                       </div>
 
-                      <h4 className="text-white text-xl sm:text-2xl font-black mt-2">{edu.degree}</h4>
-                      <p className="text-blue-400 text-sm font-bold mb-4">{edu.institution}</p>
-                      <p className="text-slate-300 text-sm leading-relaxed font-normal">{edu.description}</p>
+                      <h4 className="font-display text-[#111111] text-xl sm:text-2xl font-bold mt-2">{edu.degree}</h4>
+                      <p className="text-zinc-800 text-sm font-semibold mb-4">{edu.institution}</p>
+                      <p className="text-zinc-600 text-sm leading-relaxed font-normal">{edu.description}</p>
                     </div>
                   </div>
                 ))}
 
                 {/* Core Theoretical Foundations Card */}
                 <div className="relative group">
-                  <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#070A12] border-2 border-slate-700 group-hover:border-blue-500 transition-colors" />
+                  <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-white border-2 border-black/[0.3] group-hover:border-black transition-colors" />
                   
-                  <div className="bg-[#0F172A]/75 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-slate-800/90 shadow-xl">
+                  <div className="bg-white rounded-3xl p-6 sm:p-8 border border-black/[0.08] shadow-sm">
                     <div className="flex items-center gap-2 mb-2">
-                      <Cpu className="w-4 h-4 text-cyan-400" />
-                      <h4 className="text-white text-lg font-bold">Core Academic Foundations</h4>
+                      <Cpu className="w-4 h-4 text-zinc-700" />
+                      <h4 className="font-display text-[#111111] text-lg font-bold">Core Academic Foundations</h4>
                     </div>
-                    <p className="text-slate-400 text-xs mb-5 font-semibold">
+                    <p className="text-zinc-500 text-xs mb-5 font-semibold">
                       Key Theoretical Disciplines & CS Fundamentals
                     </p>
                     
@@ -190,7 +186,7 @@ function Experience() {
                       {foundationTopics.map((topic) => (
                         <span
                           key={topic}
-                          className="px-3 py-1.5 rounded-xl bg-[#070A12] text-slate-200 border border-slate-800 text-xs font-medium hover:border-blue-500/40 hover:text-white transition-colors"
+                          className="px-3 py-1.5 rounded-full bg-[#F8F8F9] text-zinc-700 border border-black/[0.06] text-xs font-medium hover:border-black/30 hover:bg-white hover:text-black transition-colors shadow-xs"
                         >
                           {topic}
                         </span>

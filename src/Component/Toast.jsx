@@ -28,24 +28,22 @@ export function ToastProvider({ children }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl bg-[#0B101E]/95 border border-slate-700/80 backdrop-blur-2xl shadow-2xl text-white text-xs sm:text-sm font-medium animate-fadeIn transition-all"
-            style={{
-              boxShadow: "0 10px 30px -10px rgba(0,0,0,0.8), 0 0 20px rgba(59,130,246,0.2)",
-            }}
+            className="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/95 border border-black/[0.1] backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.12)] text-[#111111] text-xs sm:text-sm font-medium animate-fadeIn transition-all"
           >
             {toast.type === "success" && (
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             )}
             {toast.type === "error" && (
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
             )}
             {toast.type === "info" && (
-              <Info className="w-4 h-4 text-blue-400 shrink-0" />
+              <Info className="w-4 h-4 text-zinc-700 shrink-0" />
             )}
-            <span className="flex-1 text-slate-200">{toast.message}</span>
+            <span className="flex-1 text-zinc-800">{toast.message}</span>
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-slate-400 hover:text-white p-1 rounded-lg transition"
+              className="text-zinc-400 hover:text-black p-1 rounded-lg transition cursor-pointer"
+              aria-label="Dismiss notification"
             >
               <X className="w-3.5 h-3.5" />
             </button>

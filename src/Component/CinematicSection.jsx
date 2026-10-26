@@ -263,18 +263,18 @@ export function CinematicSection({
     };
   }, [enableEnter, enableExit, enterDirection, exitDirection]);
 
-  // Determine Beam Styling based on enterDirection
+  // Determine Beam Styling based on enterDirection (Subtle Editorial Seam)
   const getGlowBeamClasses = () => {
     switch (enterDirection) {
       case "left-to-right":
-        return "absolute top-0 bottom-0 left-0 w-[2.5px] bg-gradient-to-b from-transparent via-cyan-400 to-transparent shadow-[0_0_25px_rgba(34,211,238,0.9)]";
+        return "absolute top-0 bottom-0 left-0 w-[1.5px] bg-gradient-to-b from-transparent via-neutral-400 to-transparent shadow-[0_0_15px_rgba(0,0,0,0.12)]";
       case "right-to-left":
-        return "absolute top-0 bottom-0 right-0 w-[2.5px] bg-gradient-to-b from-transparent via-indigo-500 to-transparent shadow-[0_0_25px_rgba(99,102,241,0.9)]";
+        return "absolute top-0 bottom-0 right-0 w-[1.5px] bg-gradient-to-b from-transparent via-neutral-400 to-transparent shadow-[0_0_15px_rgba(0,0,0,0.12)]";
       case "bottom-to-top":
-        return "absolute bottom-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-transparent via-blue-500 to-transparent shadow-[0_0_25px_rgba(59,130,246,0.9)]";
+        return "absolute bottom-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-neutral-400 to-transparent shadow-[0_0_15px_rgba(0,0,0,0.12)]";
       case "top-to-bottom":
       default:
-        return "absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-transparent via-blue-500 to-transparent shadow-[0_0_25px_rgba(59,130,246,0.9)]";
+        return "absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-neutral-400 to-transparent shadow-[0_0_15px_rgba(0,0,0,0.12)]";
     }
   };
 
@@ -304,10 +304,10 @@ export function CinematicSection({
             backfaceVisibility: "hidden",
           }}
         >
-          {/* Subtle Ambient Radial Halos that shift with parallax */}
-          <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-10 right-1/4 w-[550px] h-[550px] bg-indigo-600/5 rounded-full blur-3xl" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.03),transparent_70%)]" />
+          {/* Subtle Ambient Halos that shift with parallax */}
+          <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-black/[0.015] rounded-full blur-3xl" />
+          <div className="absolute bottom-10 right-1/4 w-[550px] h-[550px] bg-black/[0.015] rounded-full blur-3xl" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(0,0,0,0.02),transparent_70%)]" />
         </div>
 
         {/* PARALLAX LAYER 2: Foreground Content Layer (moves at full speed with 3D tilt & zoom) */}
@@ -330,11 +330,11 @@ export function CinematicSection({
           {/* Section Main Content */}
           {children}
 
-          {/* Closing Dark Cinematic Vignette Curtain */}
+          {/* Closing Subtle Editorial Vignette Curtain */}
           {enableExit && (
             <div
               ref={curtainRef}
-              className="absolute inset-0 bg-gradient-to-b from-[#0A0E17]/50 via-[#0A0E17]/75 to-[#0A0E17] pointer-events-none z-40 opacity-0 transition-opacity"
+              className="absolute inset-0 bg-gradient-to-b from-black/[0.02] via-black/[0.05] to-black/[0.08] pointer-events-none z-40 opacity-0 transition-opacity"
             />
           )}
         </div>

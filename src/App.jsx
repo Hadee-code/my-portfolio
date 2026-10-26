@@ -1,12 +1,12 @@
 import React from "react";
 import Navbar from "./Component/Navbar";
 import Hero from "./Component/Hero";
-import Services from "./Component/Services";
 import About from "./Component/About";
-import Skills from "./Component/Skills";
+import CareerTrajectory from "./Component/CareerTrajectory";
 import Portfolio from "./Component/Portfolio";
-import Experience from "./Component/Experience";
-import Contact from "./Component/Contact";
+import Skills from "./Component/Skills";
+import AIEngineeringLab from "./Component/AIEngineeringLab";
+import EducationCertifications from "./Component/EducationCertifications";
 import Footer from "./Component/Footer";
 import CinematicSection from "./Component/CinematicSection";
 import ToastProvider from "./Component/Toast";
@@ -14,93 +14,94 @@ import ToastProvider from "./Component/Toast";
 function App() {
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-[#070A12] text-slate-100 flex flex-col selection:bg-blue-600 selection:text-white overflow-x-hidden relative font-sans">
+      <div className="min-h-screen bg-[#F3F3F3] text-[#111111] flex flex-col selection:bg-[#111111] selection:text-white overflow-x-hidden relative font-sans">
         <Navbar />
       
-      {/* 3D Cinematic Directional Scroll Stage */}
-      <main className="flex-1 relative w-full overflow-x-clip" style={{ perspective: "1400px" }}>
-        
-        {/* Section 1: Hero */}
-        <CinematicSection
-          zIndex={10}
-          enableEnter={false}
-          enableExit={true}
-          exitDirection="top-to-bottom"
-        >
-          <Hero />
-        </CinematicSection>
+        {/* 3D Cinematic Directional Scroll Stage */}
+        <main className="flex-1 relative w-full overflow-x-clip" style={{ perspective: "1400px" }}>
+          
+          {/* Section 01: Hero Section */}
+          <CinematicSection
+            zIndex={10}
+            enableEnter={false}
+            enableExit={true}
+            exitDirection="top-to-bottom"
+          >
+            <Hero />
+          </CinematicSection>
 
-        {/* Section 2: Services -> Transition 1: TOP TO BOTTOM */}
-        <CinematicSection
-          zIndex={20}
-          enableEnter={true}
-          enterDirection="top-to-bottom"
-          enableExit={true}
-          exitDirection="left-to-right"
-        >
-          <Services />
-        </CinematicSection>
+          {/* Section 02: Engineering Profile */}
+          <CinematicSection
+            zIndex={20}
+            enableEnter={true}
+            enterDirection="top-to-bottom"
+            enableExit={true}
+            exitDirection="left-to-right"
+          >
+            <About />
+          </CinematicSection>
 
-        {/* Section 3: About -> Transition 2: LEFT TO RIGHT */}
-        <CinematicSection
-          zIndex={30}
-          enableEnter={true}
-          enterDirection="left-to-right"
-          enableExit={true}
-          exitDirection="right-to-left"
-        >
-          <About />
-        </CinematicSection>
+          {/* Section 03: Career Trajectory */}
+          <CinematicSection
+            zIndex={30}
+            enableEnter={true}
+            enterDirection="left-to-right"
+            enableExit={true}
+            exitDirection="right-to-left"
+          >
+            <CareerTrajectory />
+          </CinematicSection>
 
-        {/* Section 4: Skills -> Transition 3: RIGHT TO LEFT */}
-        <CinematicSection
-          zIndex={40}
-          enableEnter={true}
-          enterDirection="right-to-left"
-          enableExit={true}
-          exitDirection="bottom-to-top"
-        >
-          <Skills />
-        </CinematicSection>
+          {/* Section 04: Engineering Showcase */}
+          <CinematicSection
+            zIndex={40}
+            enableEnter={true}
+            enterDirection="right-to-left"
+            enableExit={true}
+            exitDirection="bottom-to-top"
+          >
+            <Portfolio />
+          </CinematicSection>
 
-        {/* Section 5: Portfolio -> Transition 4: BOTTOM TO TOP */}
-        <CinematicSection
-          zIndex={50}
-          enableEnter={true}
-          enterDirection="bottom-to-top"
-          enableExit={true}
-          exitDirection="top-to-bottom"
-        >
-          <Portfolio />
-        </CinematicSection>
+          {/* Section 05: Technical Arsenal */}
+          <CinematicSection
+            zIndex={50}
+            enableEnter={true}
+            enterDirection="bottom-to-top"
+            enableExit={true}
+            exitDirection="top-to-bottom"
+          >
+            <Skills />
+          </CinematicSection>
 
-        {/* Section 6: Experience -> Transition 5: TOP TO BOTTOM (Sequence Repeated) */}
-        <CinematicSection
-          zIndex={60}
-          enableEnter={true}
-          enterDirection="top-to-bottom"
-          enableExit={true}
-          exitDirection="left-to-right"
-        >
-          <Experience />
-        </CinematicSection>
+          {/* Section 06: AI & Engineering Lab */}
+          <CinematicSection
+            zIndex={60}
+            enableEnter={true}
+            enterDirection="top-to-bottom"
+            enableExit={true}
+            exitDirection="left-to-right"
+          >
+            <AIEngineeringLab />
+          </CinematicSection>
 
-        {/* Section 7: Contact -> Transition 6: LEFT TO RIGHT (Sequence Repeated) */}
-        <CinematicSection
-          zIndex={70}
-          enableEnter={true}
-          enterDirection="left-to-right"
-          enableExit={true}
-          exitDirection="right-to-left"
-        >
-          <Contact />
-        </CinematicSection>
+          {/* Section 07: Education & Certifications */}
+          <CinematicSection
+            zIndex={70}
+            enableEnter={true}
+            enterDirection="left-to-right"
+            enableExit={true}
+            exitDirection="bottom-to-top"
+          >
+            <EducationCertifications />
+          </CinematicSection>
 
-      </main>
+        </main>
 
-      <div className="relative z-[80]">
-        <Footer />
-      </div>
+        {/* Section 08: Consolidated Footer (with integrated Contact & Inquiries) */}
+        <div className="relative z-[80]">
+          <Footer />
+        </div>
       </div>
     </ToastProvider>
   );
