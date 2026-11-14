@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { 
   Briefcase, 
   Calendar, 
@@ -9,54 +11,151 @@ import {
   Brain
 } from "lucide-react";
 import profileData from "../data/profileData";
-import Reveal from "./Reveal";
+import InteractiveTilt from "./InteractiveTilt";
 
-function CareerTrajectory() {
+gsap.registerPlugin(ScrollTrigger);
+
+export function CareerTrajectory() {
   const { experience, careerMilestones } = profileData;
 
+  const sectionRef = useRef(null);
+  const headerRef = useRef(null);
+  const leftColRef = useRef(null);
+  const rightColRef = useRef(null);
+  const timelineProgressRef = useRef(null);
+  const timelineTrackRef = useRef(null);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion || !sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Header entrance
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current.children,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+
+      // Left Column Experience Card entrance
+      if (leftColRef.current) {
+        gsap.fromTo(
+          leftColRef.current,
+          { opacity: 0, x: -40, scale: 0.97 },
+          {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: leftColRef.current,
+              start: "top 82%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+
+      // Right Column Milestones staggered entrance
+      if (rightColRef.current) {
+        const milestoneCards = rightColRef.current.querySelectorAll(".milestone-item");
+        gsap.fromTo(
+          milestoneCards,
+          { opacity: 0, x: 35, y: 15 },
+          {
+            opacity: 1,
+            x: 0,
+            y: 0,
+            duration: 0.75,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: rightColRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+
+      // Animated Timeline Laser/Progress Line
+      if (timelineProgressRef.current && timelineTrackRef.current) {
+        gsap.fromTo(
+          timelineProgressRef.current,
+          { scaleY: 0 },
+          {
+            scaleY: 1,
+            ease: "none",
+            transformOrigin: "top center",
+            scrollTrigger: {
+              trigger: timelineTrackRef.current,
+              start: "top 75%",
+              end: "bottom 65%",
+              scrub: 0.8,
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="career" className="w-full bg-[#F3F3F3] text-[#111111] px-6 md:px-12 lg:px-16 py-14 md:py-18 border-t border-black/[0.06] relative overflow-hidden bg-lines-pattern">
+    <section 
+      ref={sectionRef}
+      id="career" 
+      className="w-full bg-[#F3F3F3] text-[#111111] px-6 md:px-12 lg:px-16 py-14 md:py-18 border-t border-black/[0.06] relative overflow-hidden bg-lines-pattern"
+    >
       <div className="w-full max-w-[1400px] mx-auto relative z-10">
         
         {/* Section Heading */}
-        <div className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
-          <Reveal direction="down" delay={100}>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] mb-3 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-[#111111]" />
-              <span className="text-[#111111] text-xs font-bold uppercase tracking-wider">Career Trajectory</span>
-            </div>
-          </Reveal>
+        <div ref={headerRef} className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] mb-3 shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-[#111111]" />
+            <span className="text-[#111111] text-xs font-bold uppercase tracking-wider">Career Trajectory</span>
+          </div>
           
-          <Reveal direction="clip-up" delay={200}>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#111111]">
-              Professional Journey & <span className="font-light italic text-zinc-500">AI Progression</span>
-            </h2>
-          </Reveal>
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#111111]">
+            Professional Journey & <span className="font-light italic text-zinc-500">AI Progression</span>
+          </h2>
 
-          <Reveal direction="up" delay={300}>
-            <p className="text-zinc-600 text-sm sm:text-base mt-3 leading-relaxed font-normal">
-              Hands-on software engineering at Techset Solutions paired with continuous progression toward scalable AI pipelines and intelligent systems.
-            </p>
-          </Reveal>
+          <p className="text-zinc-600 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+            Hands-on software engineering at Techset Solutions paired with continuous progression toward scalable AI pipelines and intelligent systems.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
           
           {/* Left Column: Current Role & Production Achievements */}
-          <div className="lg:col-span-7 space-y-6">
-            <Reveal direction="left" delay={200}>
-              <div className="flex items-center gap-3.5 mb-5">
-                <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs">
-                  <Briefcase className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="font-display text-[#111111] text-xl sm:text-2xl font-bold">Engineering Experience</h3>
-                  <p className="text-zinc-500 text-[11px] uppercase tracking-wider font-semibold">Active Production Engineering</p>
-                </div>
+          <div ref={leftColRef} className="lg:col-span-7 space-y-6">
+            <div className="flex items-center gap-3.5 mb-5">
+              <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs">
+                <Briefcase className="w-5 h-5" />
               </div>
+              <div>
+                <h3 className="font-display text-[#111111] text-xl sm:text-2xl font-bold">Engineering Experience</h3>
+                <p className="text-zinc-500 text-[11px] uppercase tracking-wider font-semibold">Active Production Engineering</p>
+              </div>
+            </div>
 
-              {experience.map((job, idx) => (
-                <div key={idx} className="bg-white rounded-3xl p-6 sm:p-7 border border-black/[0.08] hover:border-black/30 hover:shadow-[0_16px_36px_rgba(0,0,0,0.06)] transition-all duration-300 shadow-sm relative overflow-hidden">
+            {experience.map((job, idx) => (
+              <InteractiveTilt key={idx} maxTilt={4} scale={1.01}>
+                <div className="bg-white rounded-3xl p-6 sm:p-7 border border-black/[0.08] hover:border-black/30 hover:shadow-[0_16px_36px_rgba(0,0,0,0.06)] transition-all duration-300 shadow-sm relative overflow-hidden">
                   
                   {/* Top Badges */}
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-3.5">
@@ -106,7 +205,7 @@ function CareerTrajectory() {
                       <span className="font-display font-bold text-xs sm:text-sm text-[#111111]">
                         Progression Toward AI Engineering
                       </span>
-                      <span className="text-[10px] font-mono-code bg-white text-zinc-700 px-2 py-0.5 rounded border border-black/[0.08] ml-auto">
+                      <span className="text-[10px] font-mono-code bg-white text-zinc-700 px-2 py-0.5 rounded border border-black/[0.08] ml-auto font-semibold">
                         EXPANDING
                       </span>
                     </div>
@@ -123,37 +222,47 @@ function CareerTrajectory() {
                   {/* Tech Stack Chips */}
                   <div className="mt-5 pt-3.5 border-t border-black/[0.06] flex flex-wrap gap-1.5">
                     {["React 19", "Next.js", "Node.js", "Express", "MongoDB", "PostgreSQL", "Prisma", "Python", "JWT Auth", "Git Flow"].map((t) => (
-                      <span key={t} className="px-2.5 py-1 rounded-md text-[10px] font-semibold bg-[#F8F8F9] text-zinc-700 border border-black/[0.06]">
+                      <span key={t} className="px-2.5 py-1 rounded-md text-[10px] font-semibold bg-[#F8F8F9] text-zinc-700 border border-black/[0.06] hover:border-black/30 hover:bg-white transition-all">
                         {t}
                       </span>
                     ))}
                   </div>
 
                 </div>
-              ))}
-            </Reveal>
+              </InteractiveTilt>
+            ))}
           </div>
 
-          {/* Right Column: Strategic Milestones & Engineering Phases */}
-          <div className="lg:col-span-5 space-y-5">
-            <Reveal direction="right" delay={300}>
-              <div className="flex items-center gap-3.5 mb-5">
-                <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs">
-                  <Milestone className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="font-display text-[#111111] text-xl sm:text-2xl font-bold">Career Milestones</h3>
-                  <p className="text-zinc-500 text-[11px] uppercase tracking-wider font-semibold">Evolutionary Trajectory</p>
-                </div>
+          {/* Right Column: Strategic Milestones & Engineering Phases with Scroll-Driven Progress Line */}
+          <div ref={rightColRef} className="lg:col-span-5 space-y-5">
+            <div className="flex items-center gap-3.5 mb-5">
+              <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs">
+                <Milestone className="w-5 h-5" />
               </div>
+              <div>
+                <h3 className="font-display text-[#111111] text-xl sm:text-2xl font-bold">Career Milestones</h3>
+                <p className="text-zinc-500 text-[11px] uppercase tracking-wider font-semibold">Evolutionary Trajectory</p>
+              </div>
+            </div>
 
-              {/* Vertical Stepper Timeline */}
-              <div className="relative border-l-2 border-black/[0.12] pl-6 ml-3 sm:ml-4 space-y-4">
-                {careerMilestones.map((milestone, mIdx) => (
-                  <div key={mIdx} className="relative group">
-                    {/* Node Dot */}
-                    <div className="absolute -left-[31px] top-4 w-3.5 h-3.5 rounded-full bg-white border-2 border-[#111111] group-hover:bg-[#111111] group-hover:scale-125 transition-all shadow-xs" />
+            {/* Vertical Stepper Timeline with Scroll-linked progress */}
+            <div ref={timelineTrackRef} className="relative pl-6 ml-3 sm:ml-4 space-y-4">
+              {/* Timeline Background Track */}
+              <div className="absolute left-0 top-2 bottom-2 w-[2px] bg-black/[0.08]" />
 
+              {/* Timeline Animated Fill Line */}
+              <div
+                ref={timelineProgressRef}
+                className="absolute left-0 top-2 bottom-2 w-[2px] bg-[#111111] shadow-[0_0_8px_rgba(0,0,0,0.3)] will-change-transform"
+                style={{ transformOrigin: "top center" }}
+              />
+
+              {careerMilestones.map((milestone, mIdx) => (
+                <div key={mIdx} className="milestone-item relative group">
+                  {/* Node Dot */}
+                  <div className="absolute -left-[30px] top-4 w-3.5 h-3.5 rounded-full bg-white border-2 border-[#111111] group-hover:bg-[#111111] group-hover:scale-125 transition-all shadow-xs z-10" />
+
+                  <InteractiveTilt maxTilt={4} scale={1.01}>
                     <div className="bg-white rounded-2xl p-4 sm:p-5 border border-black/[0.08] shadow-sm hover:border-black/30 hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] transition-all">
                       <div className="flex items-center justify-between mb-1.5">
                         <span className="text-[11px] font-mono-code font-bold text-zinc-500">
@@ -176,10 +285,10 @@ function CareerTrajectory() {
                         {milestone.detail}
                       </p>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
+                  </InteractiveTilt>
+                </div>
+              ))}
+            </div>
           </div>
 
         </div>

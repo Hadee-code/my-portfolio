@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { 
   ArrowUp, 
   Sparkles, 
@@ -19,8 +21,11 @@ import {
 } from "lucide-react";
 import { LinkedinIcon, GithubIcon } from "./SocialIcons";
 import profileData from "../data/profileData";
-import Reveal from "./Reveal";
 import { useToast } from "./ToastContext";
+import { useSmoothScroll } from "./SmoothScrollContext";
+import InteractiveTilt from "./InteractiveTilt";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const inquiryTypes = [
   "Full-Time Role",
@@ -29,9 +34,15 @@ const inquiryTypes = [
   "General Inquiry",
 ];
 
-function Footer() {
+export function Footer() {
   const { name, role, email, phone, location, socials, cvFile } = profileData;
   const { addToast } = useToast();
+  const smoothScroll = useSmoothScroll();
+
+  const sectionRef = useRef(null);
+  const headerRef = useRef(null);
+  const leftColRef = useRef(null);
+  const rightColRef = useRef(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -65,6 +76,73 @@ function Footer() {
     updateTime();
     const timer = setInterval(updateTime, 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  // GSAP ScrollTrigger Animations
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion || !sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current.children,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+
+      if (leftColRef.current) {
+        gsap.fromTo(
+          leftColRef.current,
+          { opacity: 0, x: -35, scale: 0.98 },
+          {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            duration: 0.85,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: leftColRef.current,
+              start: "top 82%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+
+      if (rightColRef.current) {
+        gsap.fromTo(
+          rightColRef.current,
+          { opacity: 0, x: 35, scale: 0.98 },
+          {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            duration: 0.85,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: rightColRef.current,
+              start: "top 82%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
   const handleChange = (e) => {
@@ -110,7 +188,11 @@ function Footer() {
   };
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (smoothScroll && smoothScroll.scrollTo) {
+      smoothScroll.scrollTo(0);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const handleDownloadCV = () => {
@@ -142,152 +224,153 @@ function Footer() {
   };
 
   return (
-    <footer id="footer" className="w-full bg-[#EAEAEA] text-[#111111] relative border-t border-black/[0.08] overflow-hidden">
-      
+    <footer 
+      ref={sectionRef}
+      id="footer" 
+      className="w-full bg-[#EAEAEA] text-[#111111] relative border-t border-black/[0.08] overflow-hidden"
+    >
       {/* Top Hairline Seam */}
       <div className="w-full h-[1px] bg-black/[0.08]" />
 
       <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 pt-14 md:pt-16 pb-10 md:pb-12">
         
-        {/* ======================================================== */}
-        {/* SECTION 1: INVITATION & DIRECT CONTACT STAGE             */}
-        {/* ======================================================== */}
-        
         {/* Section Heading */}
-        <div className="text-center max-w-3xl mx-auto mb-10 md:mb-12">
-          <Reveal direction="down" delay={100}>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] mb-3 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-[#111111]" />
-              <span className="text-[#111111] text-xs font-bold uppercase tracking-wider font-mono-code">
-                Contact & Opportunities
-              </span>
-            </div>
-          </Reveal>
+        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-10 md:mb-12">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] mb-3 shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-[#111111]" />
+            <span className="text-[#111111] text-xs font-bold uppercase tracking-wider font-mono-code">
+              Contact & Opportunities
+            </span>
+          </div>
           
-          <Reveal direction="clip-up" delay={200}>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#111111]">
-              Let's Discuss Professional <span className="font-light italic text-zinc-500">Opportunities</span>
-            </h2>
-          </Reveal>
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#111111]">
+            Let's Discuss Professional <span className="font-light italic text-zinc-500">Opportunities</span>
+          </h2>
 
-          <Reveal direction="up" delay={300}>
-            <p className="text-zinc-600 text-sm sm:text-base mt-3 leading-relaxed font-normal max-w-2xl mx-auto">
-              Open for full-time engineering roles, technical contracts, and architecture discussions. Let's start a conversation.
-            </p>
-          </Reveal>
+          <p className="text-zinc-600 text-sm sm:text-base mt-3 leading-relaxed font-normal max-w-2xl mx-auto">
+            Open for full-time engineering roles, technical contracts, and architecture discussions. Let's start a conversation.
+          </p>
         </div>
 
         {/* 2-Column Consolidated Contact Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-stretch">
           
           {/* Left Column: Direct Channels & Status */}
-          <Reveal direction="left" delay={200} className="lg:col-span-5 flex flex-col justify-between space-y-3.5">
+          <div ref={leftColRef} className="lg:col-span-5 flex flex-col justify-between space-y-3.5">
             
             {/* Status Card */}
-            <div className="bg-white border border-black/[0.08] rounded-2xl p-5 shadow-xs relative overflow-hidden">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2.5">
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+            <InteractiveTilt maxTilt={3} scale={1.008}>
+              <div className="bg-white border border-black/[0.08] rounded-2xl p-5 shadow-xs relative overflow-hidden">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2.5">
+                    <span className="relative flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                    </span>
+                    <span className="text-[#111111] font-bold text-sm">Available for Impact</span>
+                  </div>
+                  <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono-code">
+                    FAST RESPONSE
                   </span>
-                  <span className="text-[#111111] font-bold text-sm">Available for Impact</span>
                 </div>
-                <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono-code">
-                  FAST RESPONSE
-                </span>
+                <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed font-normal">
+                  Currently taking inquiries for full-stack engineering roles (MERN, Next.js, PostgreSQL) and software contracts.
+                </p>
               </div>
-              <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed font-normal">
-                Currently taking inquiries for full-stack engineering roles (MERN, Next.js, PostgreSQL) and software contracts.
-              </p>
-            </div>
+            </InteractiveTilt>
 
             {/* Email Card with One-Click Copy */}
-            <div className="group bg-white border border-black/[0.08] hover:border-black/30 rounded-2xl p-4 sm:p-5 transition-all duration-300 hover:-translate-y-0.5 shadow-xs hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] flex items-center justify-between">
-              <div className="flex items-center gap-3.5 overflow-hidden">
-                <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs shrink-0 group-hover:scale-105 transition-transform">
-                  <Mail className="w-4 h-4" />
+            <InteractiveTilt maxTilt={3} scale={1.008}>
+              <div className="group bg-white border border-black/[0.08] hover:border-black/30 rounded-2xl p-4 sm:p-5 transition-all duration-300 shadow-xs hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] flex items-center justify-between">
+                <div className="flex items-center gap-3.5 overflow-hidden">
+                  <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs shrink-0 group-hover:scale-105 transition-transform">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <div className="overflow-hidden">
+                    <p className="text-zinc-500 text-[10px] uppercase tracking-wider font-bold font-mono-code">Email Address</p>
+                    <a
+                      href={`mailto:${email}`}
+                      className="text-[#111111] font-bold text-xs sm:text-sm hover:text-black transition-colors truncate block"
+                    >
+                      {email}
+                    </a>
+                  </div>
                 </div>
-                <div className="overflow-hidden">
-                  <p className="text-zinc-500 text-[10px] uppercase tracking-wider font-bold font-mono-code">Email Address</p>
-                  <a
-                    href={`mailto:${email}`}
-                    className="text-[#111111] font-bold text-xs sm:text-sm hover:text-black transition-colors truncate block"
-                  >
-                    {email}
-                  </a>
-                </div>
-              </div>
 
-              <button
-                type="button"
-                onClick={handleCopyEmail}
-                className="p-2 rounded-full bg-[#F8F8F9] border border-black/[0.08] text-zinc-700 hover:text-black hover:border-black/30 transition shrink-0 cursor-pointer active:scale-95 shadow-xs"
-                title="Copy email to clipboard"
-              >
-                {copiedEmail ? (
-                  <Check className="w-4 h-4 text-emerald-600" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
-              </button>
-            </div>
+                <button
+                  type="button"
+                  onClick={handleCopyEmail}
+                  className="p-2 rounded-full bg-[#F8F8F9] border border-black/[0.08] text-zinc-700 hover:text-black hover:border-black/30 transition shrink-0 cursor-pointer active:scale-95 shadow-xs"
+                  title="Copy email to clipboard"
+                >
+                  {copiedEmail ? (
+                    <Check className="w-4 h-4 text-emerald-600" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+            </InteractiveTilt>
 
             {/* Phone Card with One-Click Copy */}
-            <div className="group bg-white border border-black/[0.08] hover:border-black/30 rounded-2xl p-4 sm:p-5 transition-all duration-300 hover:-translate-y-0.5 shadow-xs hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] flex items-center justify-between">
-              <div className="flex items-center gap-3.5 overflow-hidden">
-                <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs shrink-0 group-hover:scale-105 transition-transform">
-                  <Phone className="w-4 h-4" />
+            <InteractiveTilt maxTilt={3} scale={1.008}>
+              <div className="group bg-white border border-black/[0.08] hover:border-black/30 rounded-2xl p-4 sm:p-5 transition-all duration-300 shadow-xs hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] flex items-center justify-between">
+                <div className="flex items-center gap-3.5 overflow-hidden">
+                  <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs shrink-0 group-hover:scale-105 transition-transform">
+                    <Phone className="w-4 h-4" />
+                  </div>
+                  <div className="overflow-hidden">
+                    <p className="text-zinc-500 text-[10px] uppercase tracking-wider font-bold font-mono-code">Phone / WhatsApp</p>
+                    <a
+                      href={`tel:${phone}`}
+                      className="text-[#111111] font-bold text-xs sm:text-sm hover:text-black transition-colors truncate block"
+                    >
+                      {phone}
+                    </a>
+                  </div>
                 </div>
-                <div className="overflow-hidden">
-                  <p className="text-zinc-500 text-[10px] uppercase tracking-wider font-bold font-mono-code">Phone / WhatsApp</p>
-                  <a
-                    href={`tel:${phone}`}
-                    className="text-[#111111] font-bold text-xs sm:text-sm hover:text-black transition-colors truncate block"
-                  >
-                    {phone}
-                  </a>
-                </div>
-              </div>
 
-              <button
-                type="button"
-                onClick={handleCopyPhone}
-                className="p-2 rounded-full bg-[#F8F8F9] border border-black/[0.08] text-zinc-700 hover:text-black hover:border-black/30 transition shrink-0 cursor-pointer active:scale-95 shadow-xs"
-                title="Copy phone to clipboard"
-              >
-                {copiedPhone ? (
-                  <Check className="w-4 h-4 text-emerald-600" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
-              </button>
-            </div>
+                <button
+                  type="button"
+                  onClick={handleCopyPhone}
+                  className="p-2 rounded-full bg-[#F8F8F9] border border-black/[0.08] text-zinc-700 hover:text-black hover:border-black/30 transition shrink-0 cursor-pointer active:scale-95 shadow-xs"
+                  title="Copy phone to clipboard"
+                >
+                  {copiedPhone ? (
+                    <Check className="w-4 h-4 text-emerald-600" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+            </InteractiveTilt>
 
             {/* Location & Live Ticking Clock Card */}
-            <div className="bg-white border border-black/[0.08] rounded-2xl p-4 sm:p-5 shadow-xs flex items-center justify-between">
-              <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs shrink-0">
-                  <MapPin className="w-4 h-4" />
+            <InteractiveTilt maxTilt={3} scale={1.008}>
+              <div className="bg-white border border-black/[0.08] rounded-2xl p-4 sm:p-5 shadow-xs flex items-center justify-between">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs shrink-0">
+                    <MapPin className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-zinc-500 text-[10px] uppercase tracking-wider font-bold font-mono-code">Location</p>
+                    <p className="text-[#111111] font-bold text-xs sm:text-sm">
+                      {location}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-zinc-500 text-[10px] uppercase tracking-wider font-bold font-mono-code">Location</p>
-                  <p className="text-[#111111] font-bold text-xs sm:text-sm">
-                    {location}
+
+                <div className="text-right">
+                  <div className="flex items-center gap-1.5 text-xs text-zinc-600 font-bold justify-end font-mono-code">
+                    <Clock className="w-3.5 h-3.5 text-zinc-500" />
+                    <span>PKT (UTC+5)</span>
+                  </div>
+                  <p className="text-xs text-zinc-800 font-mono-code mt-0.5 font-bold">
+                    {localTime || "12:00 PM"}
                   </p>
                 </div>
               </div>
-
-              <div className="text-right">
-                <div className="flex items-center gap-1.5 text-xs text-zinc-600 font-bold justify-end font-mono-code">
-                  <Clock className="w-3.5 h-3.5 text-zinc-500" />
-                  <span>PKT (UTC+5)</span>
-                </div>
-                <p className="text-xs text-zinc-800 font-mono-code mt-0.5 font-bold">
-                  {localTime || "12:00 PM"}
-                </p>
-              </div>
-            </div>
+            </InteractiveTilt>
 
             {/* Quick Actions Strip */}
             <div className="pt-1 flex flex-col sm:flex-row items-center gap-2.5">
@@ -317,181 +400,179 @@ function Footer() {
               </div>
             </div>
 
-          </Reveal>
+          </div>
 
           {/* Right Column: Direct Message Form */}
-          <Reveal direction="right" delay={300} className="lg:col-span-7 flex flex-col justify-between">
-            <div className="h-full bg-white border border-black/[0.08] rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <h3 className="font-display text-[#111111] text-xl sm:text-2xl font-bold">Send a Direct Message</h3>
-                  <Sparkles className="w-5 h-5 text-zinc-600" />
-                </div>
-                
-                <p className="text-zinc-600 text-xs sm:text-sm mb-5 font-normal">
-                  Leave your project scope or recruitment details below and I will review and reply within 24 hours.
-                </p>
-
-                {isSubmitted ? (
-                  <div className="bg-[#F8F8F9] border border-black/[0.08] rounded-2xl p-6 text-center animate-fadeIn">
-                    <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center mx-auto mb-3">
-                      <CheckCircle2 className="w-6 h-6" />
-                    </div>
-                    <h4 className="font-display text-[#111111] font-bold text-lg mb-1">Message Dispatched!</h4>
-                    <p className="text-zinc-600 text-xs sm:text-sm mb-4 max-w-sm mx-auto">
-                      Thank you for reaching out. Your inquiry has been received and I will reply via email shortly.
-                    </p>
-                    <button
-                      onClick={() => setIsSubmitted(false)}
-                      className="px-4 py-2 rounded-full bg-[#111111] text-white text-xs font-bold hover:bg-neutral-800 transition cursor-pointer shadow-xs"
-                    >
-                      Send another message
-                    </button>
+          <div ref={rightColRef} className="lg:col-span-7 flex flex-col justify-between">
+            <InteractiveTilt maxTilt={3} scale={1.008} className="h-full">
+              <div className="h-full bg-white border border-black/[0.08] rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <h3 className="font-display text-[#111111] text-xl sm:text-2xl font-bold">Send a Direct Message</h3>
+                    <Sparkles className="w-5 h-5 text-zinc-600" />
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-3.5">
-                    
-                    {/* Inquiry Category Pills */}
-                    <div>
-                      <label className="block text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-2 font-mono-code">
-                        Inquiry Category
-                      </label>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2">
-                        {inquiryTypes.map((type) => (
-                          <button
-                            key={type}
-                            type="button"
-                            onClick={() => handleSelectType(type)}
-                            className={`py-1.5 px-2.5 rounded-xl text-xs font-semibold transition text-center cursor-pointer border ${
-                              formData.inquiryType === type
-                                ? "bg-[#111111] text-white border-[#111111] shadow-xs"
-                                : "bg-[#F8F8F9] text-zinc-700 border-black/[0.08] hover:border-black/30 hover:bg-white"
-                            }`}
-                          >
-                            {type}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+                  
+                  <p className="text-zinc-600 text-xs sm:text-sm mb-5 font-normal">
+                    Leave your project scope or recruitment details below and I will review and reply within 24 hours.
+                  </p>
 
-                    {/* Name & Email Row */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {isSubmitted ? (
+                    <div className="bg-[#F8F8F9] border border-black/[0.08] rounded-2xl p-6 text-center animate-fadeIn">
+                      <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center mx-auto mb-3">
+                        <CheckCircle2 className="w-6 h-6" />
+                      </div>
+                      <h4 className="font-display text-[#111111] font-bold text-lg mb-1">Message Dispatched!</h4>
+                      <p className="text-zinc-600 text-xs sm:text-sm mb-4 max-w-sm mx-auto">
+                        Thank you for reaching out. Your inquiry has been received and I will reply via email shortly.
+                      </p>
+                      <button
+                        onClick={() => setIsSubmitted(false)}
+                        className="px-4 py-2 rounded-full bg-[#111111] text-white text-xs font-bold hover:bg-neutral-800 transition cursor-pointer shadow-xs"
+                      >
+                        Send another message
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-3.5">
+                      
+                      {/* Inquiry Category Pills */}
+                      <div>
+                        <label className="block text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-2 font-mono-code">
+                          Inquiry Category
+                        </label>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2">
+                          {inquiryTypes.map((type) => (
+                            <button
+                              key={type}
+                              type="button"
+                              onClick={() => handleSelectType(type)}
+                              className={`py-1.5 px-2.5 rounded-xl text-xs font-semibold transition text-center cursor-pointer border ${
+                                formData.inquiryType === type
+                                  ? "bg-[#111111] text-white border-[#111111] shadow-xs"
+                                  : "bg-[#F8F8F9] text-zinc-700 border-black/[0.08] hover:border-black/30 hover:bg-white"
+                              }`}
+                            >
+                              {type}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Name & Email Row */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-1.5 font-mono-code">
+                            Your Name
+                          </label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
+                              <User className="w-3.5 h-3.5" />
+                            </div>
+                            <input
+                              type="text"
+                              name="name"
+                              required
+                              value={formData.name}
+                              onChange={handleChange}
+                              placeholder="e.g. Alex Henderson"
+                              className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-1.5 font-mono-code">
+                            Email Address
+                          </label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
+                              <Mail className="w-3.5 h-3.5" />
+                            </div>
+                            <input
+                              type="email"
+                              name="email"
+                              required
+                              value={formData.email}
+                              onChange={handleChange}
+                              placeholder="e.g. alex@company.com"
+                              className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Subject Input */}
                       <div>
                         <label className="block text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-1.5 font-mono-code">
-                          Your Name
+                          Subject
                         </label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
-                            <User className="w-3.5 h-3.5" />
+                            <Tag className="w-3.5 h-3.5" />
                           </div>
                           <input
                             type="text"
-                            name="name"
+                            name="subject"
                             required
-                            value={formData.name}
+                            value={formData.subject}
                             onChange={handleChange}
-                            placeholder="e.g. Alex Henderson"
+                            placeholder="e.g. Full Stack Developer Opening"
                             className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition"
                           />
                         </div>
                       </div>
 
+                      {/* Message Textarea */}
                       <div>
                         <label className="block text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-1.5 font-mono-code">
-                          Email Address
+                          Message Details
                         </label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
-                            <Mail className="w-3.5 h-3.5" />
-                          </div>
-                          <input
-                            type="email"
-                            name="email"
-                            required
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="e.g. alex@company.com"
-                            className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Subject Input */}
-                    <div>
-                      <label className="block text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-1.5 font-mono-code">
-                        Subject
-                      </label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
-                          <Tag className="w-3.5 h-3.5" />
-                        </div>
-                        <input
-                          type="text"
-                          name="subject"
+                        <textarea
+                          name="message"
+                          rows={3}
                           required
-                          value={formData.subject}
+                          value={formData.message}
                           onChange={handleChange}
-                          placeholder="e.g. Full Stack Developer Opening"
-                          className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition"
+                          placeholder="Share details about the role, project scope, requirements..."
+                          className="w-full p-3.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition resize-none"
                         />
                       </div>
-                    </div>
 
-                    {/* Message Textarea */}
-                    <div>
-                      <label className="block text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-1.5 font-mono-code">
-                        Message Details
-                      </label>
-                      <textarea
-                        name="message"
-                        rows={3}
-                        required
-                        value={formData.message}
-                        onChange={handleChange}
-                        placeholder="Share details about the role, project scope, requirements..."
-                        className="w-full p-3.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition resize-none"
-                      />
-                    </div>
+                      {/* Submit Button */}
+                      <button
+                        type="submit"
+                        disabled={submitting}
+                        className="w-full py-3 rounded-full bg-[#111111] hover:bg-neutral-800 text-white font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-[0.99] disabled:opacity-50 mt-1"
+                      >
+                        {submitting ? (
+                          <span className="flex items-center gap-2">
+                            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            <span>Transmitting...</span>
+                          </span>
+                        ) : (
+                          <>
+                            <span>Send Message</span>
+                            <Send className="w-3.5 h-3.5" />
+                          </>
+                        )}
+                      </button>
 
-                    {/* Submit Button */}
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="w-full py-3 rounded-full bg-[#111111] hover:bg-neutral-800 text-white font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-[0.99] disabled:opacity-50 mt-1"
-                    >
-                      {submitting ? (
-                        <span className="flex items-center gap-2">
-                          <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          <span>Transmitting...</span>
-                        </span>
-                      ) : (
-                        <>
-                          <span>Send Message</span>
-                          <Send className="w-3.5 h-3.5" />
-                        </>
-                      )}
-                    </button>
-
-                  </form>
-                )}
+                    </form>
+                  )}
+                </div>
               </div>
-            </div>
-          </Reveal>
+            </InteractiveTilt>
+          </div>
 
         </div>
 
-        {/* ======================================================== */}
-        {/* SECTION 2: SUBTLE HORIZONTAL SEPARATION LINE             */}
-        {/* ======================================================== */}
+        {/* SECTION 2: SUBTLE HORIZONTAL SEPARATION LINE */}
         <div className="w-full h-[1px] bg-black/[0.08] my-10 md:my-12" />
 
-        {/* ======================================================== */}
-        {/* SECTION 3: STRUCTURED 4-COLUMN FOOTER DIRECTORY           */}
-        {/* ======================================================== */}
+        {/* SECTION 3: STRUCTURED 4-COLUMN FOOTER DIRECTORY */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           
-          {/* Column 1: Brand & Philosophy (5 Cols on lg) */}
+          {/* Column 1: Brand & Philosophy */}
           <div className="lg:col-span-5 space-y-3.5">
             <a href="#home" className="inline-flex items-center gap-2.5 group">
               <div className="w-9 h-9 rounded-xl bg-[#111111] text-white flex items-center justify-center transition-transform group-hover:scale-105 duration-200 shadow-xs">
@@ -528,7 +609,7 @@ function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Navigation Links (3 Cols on lg) */}
+          {/* Column 2: Navigation Links */}
           <div className="lg:col-span-3">
             <p className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-zinc-400 mb-3.5">
               Navigation
@@ -552,7 +633,7 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Connect & Socials (2 Cols on lg) */}
+          {/* Column 3: Connect & Socials */}
           <div className="lg:col-span-2">
             <p className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-zinc-400 mb-3.5">
               Connect
@@ -579,7 +660,7 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Quick Actions & Back to Top (2 Cols on lg) */}
+          {/* Column 4: Quick Actions & Back to Top */}
           <div className="lg:col-span-2 flex flex-col justify-between space-y-3">
             <div>
               <p className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-zinc-400 mb-3.5">
@@ -605,7 +686,7 @@ function Footer() {
               <button
                 type="button"
                 onClick={scrollToTop}
-                className="w-full px-3.5 py-2 rounded-xl bg-white border border-black/[0.08] hover:border-black/30 text-zinc-800 hover:text-black text-xs font-semibold transition-all flex items-center justify-between shadow-xs cursor-pointer hover:-translate-y-0.5 group"
+                className="w-full px-3.5 py-2 rounded-xl bg-white border border-black/[0.08] hover:border-black/30 text-zinc-800 hover:text-black text-xs font-semibold transition-all flex items-center justify-between shadow-xs cursor-pointer hover:-translate-y-0.5 group active:scale-95"
               >
                 <span>Back to Top</span>
                 <ArrowUp className="w-3.5 h-3.5 text-zinc-500 group-hover:text-black group-hover:-translate-y-0.5 transition-all" />
@@ -615,14 +696,10 @@ function Footer() {
 
         </div>
 
-        {/* ======================================================== */}
-        {/* SECTION 4: SUBTLE HORIZONTAL SEPARATION LINE             */}
-        {/* ======================================================== */}
+        {/* SECTION 4: SUBTLE HORIZONTAL SEPARATION LINE */}
         <div className="w-full h-[1px] bg-black/[0.08] mt-10 md:mt-12 mb-6" />
 
-        {/* ======================================================== */}
-        {/* SECTION 5: BOTTOM COPYRIGHT & METADATA BAR               */}
-        {/* ======================================================== */}
+        {/* SECTION 5: BOTTOM COPYRIGHT & METADATA BAR */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-500">
           <p>
             © {new Date().getFullYear()} <span className="text-[#111111] font-bold">{name}</span>. All rights reserved.
@@ -630,7 +707,7 @@ function Footer() {
 
           <p className="flex items-center gap-2 text-zinc-500">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
-            <span>Built with <strong className="text-zinc-800 font-semibold">React 19 & Tailwind CSS v4</strong></span>
+            <span>Built with <strong className="text-zinc-800 font-semibold">React 19, GSAP & Tailwind CSS</strong></span>
           </p>
         </div>
 

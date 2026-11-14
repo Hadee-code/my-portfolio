@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Download, Sparkles, Menu, X, ArrowUpRight } from "lucide-react";
 import profileData from "../data/profileData";
 import { useToast } from "./ToastContext";
+import { useSmoothScroll } from "./SmoothScrollContext";
 
-function Navbar() {
+export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const { addToast } = useToast();
+  const smoothScroll = useSmoothScroll();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,7 +22,7 @@ function Navbar() {
         setScrollProgress(progress);
       }
 
-      // Exact 6 sections in order + footer
+      // Sections in order + footer
       const sections = ["home", "profile", "career", "showcase", "arsenal", "education", "footer"];
       const scrollPosition = window.scrollY + 140;
 
@@ -54,6 +56,17 @@ function Navbar() {
     addToast("Downloading Muhammad Hadee Butt's CV...", "info", 3000);
   };
 
+  const handleNavClick = (e, href) => {
+    e.preventDefault();
+    if (smoothScroll && smoothScroll.scrollTo) {
+      smoothScroll.scrollTo(href);
+    } else {
+      const el = document.querySelector(href);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+    setMobileMenuOpen(false);
+  };
+
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
@@ -72,8 +85,11 @@ function Navbar() {
         
         {/* Brand Monogram & Minimalist Geometric Icon */}
         <div className="flex items-center gap-3">
-          <a href="#home" className="flex items-center gap-3 group">
-            {/* Minimal Geometric Emblem Mark matching reference */}
+          <a 
+            href="#home" 
+            onClick={(e) => handleNavClick(e, "#home")}
+            className="flex items-center gap-3 group"
+          >
             <div className="w-9 h-9 rounded-xl bg-[#111111] text-white flex items-center justify-center transition-transform group-hover:scale-105 duration-200 shadow-xs">
               <svg
                 viewBox="0 0 24 24"
@@ -108,6 +124,7 @@ function Navbar() {
               <a
                 key={link.id}
                 href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className={`text-[13px] font-medium px-3.5 py-1.5 rounded-full transition-all duration-200 relative ${
                   isActive
                     ? "text-white bg-[#111111] shadow-xs font-semibold"
@@ -122,7 +139,6 @@ function Navbar() {
 
         {/* Action Buttons & Mobile Menu Trigger */}
         <div className="flex items-center gap-2.5">
-          
           {/* Quick CV Download (Desktop) */}
           <a
             href={profileData.cvFile}
@@ -137,6 +153,7 @@ function Navbar() {
           {/* Primary Filled CTA Button pointing to #footer */}
           <a
             href="#footer"
+            onClick={(e) => handleNavClick(e, "#footer")}
             className="hidden sm:inline-flex items-center gap-1.5 bg-[#111111] text-white font-semibold px-4.5 py-1.5 rounded-full text-xs hover:bg-neutral-800 active:scale-95 transition-all duration-200 shadow-xs group"
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-300" />
@@ -162,7 +179,6 @@ function Navbar() {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-white/98 backdrop-blur-2xl border-b border-black/[0.08] px-6 py-6 shadow-xl animate-fadeIn">
-          
           {/* Status pill in mobile drawer */}
           <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium mb-4 w-fit">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
@@ -176,7 +192,7 @@ function Navbar() {
                 <a
                   key={link.id}
                   href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className={`py-2.5 px-4 rounded-xl text-sm transition flex items-center justify-between ${
                     isActive
                       ? "text-white bg-[#111111] font-semibold shadow-sm"
@@ -205,7 +221,7 @@ function Navbar() {
 
               <a
                 href="#footer"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => handleNavClick(e, "#footer")}
                 className="w-full text-center bg-[#111111] text-white py-3 rounded-xl text-xs font-semibold shadow-md flex items-center justify-center gap-2"
               >
                 <Sparkles className="w-4 h-4 text-amber-300" />

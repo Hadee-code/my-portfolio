@@ -1,4 +1,6 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { 
   Code2, 
   Layers, 
@@ -14,7 +16,9 @@ import {
   Brain,
   GitBranch
 } from "lucide-react";
-import Reveal from "./Reveal";
+import InteractiveTilt from "./InteractiveTilt";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const skillCategories = [
   {
@@ -46,14 +50,14 @@ const skillCategories = [
       },
       {
         name: "Tailwind CSS",
-        detail: "Utility-first design, fluid typography, dark-mode styling, responsive layouts",
+        detail: "Utility-first design, fluid typography, responsive grid layouts",
         level: "Mastery",
         percentage: 95,
         icon: <Cpu className="w-5 h-5 text-zinc-800" />,
       },
       {
         name: "HTML5 & CSS3",
-        detail: "Semantic elements, accessible web standards, Flexbox & CSS Grid systems",
+        detail: "Semantic elements, accessible web standards, Flexbox & CSS Grid",
         level: "Foundation",
         percentage: 96,
         icon: <Code2 className="w-5 h-5 text-zinc-800" />,
@@ -89,7 +93,7 @@ const skillCategories = [
       },
       {
         name: "REST API Design",
-        detail: "JSON Schema, pagination, HTTP status code standards, API documentation",
+        detail: "JSON Schema, pagination, HTTP status code standards, API docs",
         level: "Production",
         percentage: 92,
         icon: <Server className="w-5 h-5 text-zinc-800" />,
@@ -275,9 +279,14 @@ const dailyToolchain = [
   { name: "OpenAI APIs", category: "LLM Engine" },
 ];
 
-function Skills() {
+export function Skills() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const sectionRef = useRef(null);
+  const headerRef = useRef(null);
+  const gridRef = useRef(null);
+  const toolchainRef = useRef(null);
 
   const categories = [
     { id: "all", label: "All Arsenal" },
@@ -309,30 +318,119 @@ function Skills() {
       .filter(Boolean);
   }, [activeCategory, searchQuery]);
 
+  // GSAP ScrollTrigger Animations for Skill Cards and Progress Bars
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion || !sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Header entrance
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current.children,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+
+      // Category cards staggered entrance
+      if (gridRef.current) {
+        const cards = gridRef.current.querySelectorAll(".skill-category-card");
+        gsap.fromTo(
+          cards,
+          { opacity: 0, y: 40, scale: 0.97 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: gridRef.current,
+              start: "top 82%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+
+        // Progress bar smooth fill animations on scroll
+        const progressBars = gridRef.current.querySelectorAll(".skill-progress-bar");
+        progressBars.forEach((bar) => {
+          const targetWidth = bar.getAttribute("data-percentage") || "0";
+          gsap.fromTo(
+            bar,
+            { width: "0%" },
+            {
+              width: `${targetWidth}%`,
+              duration: 1.1,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: bar,
+                start: "top 90%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        });
+      }
+
+      // Daily toolchain strip entrance
+      if (toolchainRef.current) {
+        gsap.fromTo(
+          toolchainRef.current,
+          { opacity: 0, y: 35 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.85,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: toolchainRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [filteredCategories]);
+
   return (
-    <section id="arsenal" className="w-full bg-[#F3F3F3] text-[#111111] px-6 md:px-12 lg:px-16 py-14 md:py-18 border-t border-black/[0.06] relative overflow-hidden bg-lines-pattern">
+    <section 
+      ref={sectionRef}
+      id="arsenal" 
+      className="w-full bg-[#F3F3F3] text-[#111111] px-6 md:px-12 lg:px-16 py-14 md:py-18 border-t border-black/[0.06] relative overflow-hidden bg-lines-pattern"
+    >
       <div className="w-full max-w-[1400px] mx-auto relative z-10">
         
         {/* Section Heading */}
-        <div className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
-          <Reveal direction="down" delay={100}>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] mb-3 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-[#111111]" />
-              <span className="text-[#111111] text-xs font-bold uppercase tracking-wider">Technical Arsenal</span>
-            </div>
-          </Reveal>
+        <div ref={headerRef} className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] mb-3 shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-[#111111]" />
+            <span className="text-[#111111] text-xs font-bold uppercase tracking-wider">Technical Arsenal</span>
+          </div>
           
-          <Reveal direction="clip-up" delay={200}>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#111111]">
-              Engineered <span className="font-light italic text-zinc-500">Competencies</span>
-            </h2>
-          </Reveal>
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#111111]">
+            Engineered <span className="font-light italic text-zinc-500">Competencies</span>
+          </h2>
 
-          <Reveal direction="up" delay={300}>
-            <p className="text-zinc-600 text-sm sm:text-base mt-3 leading-relaxed font-normal">
-              Structured breakdown of production frameworks, backend engines, databases, deployment toolchains, and emerging AI technologies.
-            </p>
-          </Reveal>
+          <p className="text-zinc-600 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+            Structured breakdown of production frameworks, backend engines, databases, deployment toolchains, and emerging AI technologies.
+          </p>
 
           {/* Interactive Controls Bar: Filter Pills + Search Input */}
           <div className="mt-6 sm:mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -347,7 +445,7 @@ function Skills() {
                     onClick={() => setActiveCategory(cat.id)}
                     className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                       isActive
-                        ? "bg-[#111111] text-white shadow-xs font-semibold"
+                        ? "bg-[#111111] text-white shadow-xs font-semibold scale-105"
                         : "bg-white text-zinc-700 hover:text-black hover:bg-black/[0.04] border border-black/[0.08] shadow-xs"
                     }`}
                   >
@@ -389,108 +487,111 @@ function Skills() {
                 setSearchQuery("");
                 setActiveCategory("all");
               }}
-              className="mt-4 px-4 py-2 bg-[#111111] text-white rounded-full text-xs font-semibold"
+              className="mt-4 px-4 py-2 bg-[#111111] text-white rounded-full text-xs font-semibold cursor-pointer"
             >
               Reset Filters
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8 md:mb-10">
-            {filteredCategories.map((category, catIndex) => (
-              <Reveal key={category.id} direction="up" delay={100 * (catIndex % 2 + 1)}>
-                <div className="h-full bg-white rounded-3xl p-5 sm:p-7 border border-black/[0.08] hover:border-black/30 transition-all duration-300 shadow-sm flex flex-col justify-between">
-                  
-                  <div>
-                    {/* Category Header */}
-                    <div className="flex items-center justify-between pb-3.5 mb-5 border-b border-black/[0.06]">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs">
-                          {category.id === "frontend" && <Code2 className="w-5 h-5" />}
-                          {category.id === "backend" && <Server className="w-5 h-5" />}
-                          {category.id === "database" && <Database className="w-5 h-5" />}
-                          {category.id === "tools" && <GitBranch className="w-5 h-5" />}
-                          {category.id === "deployment" && <Cloud className="w-5 h-5" />}
-                          {category.id === "ai_ml" && <Brain className="w-5 h-5" />}
-                        </div>
-                        <div>
-                          <h3 className="font-display text-[#111111] text-lg sm:text-xl font-bold">
-                            {category.title}
-                          </h3>
-                          <span className="text-xs text-zinc-500 font-medium">
-                            {category.badge}
-                          </span>
-                        </div>
-                      </div>
-
-                      <span className="font-mono-code text-xs font-bold text-zinc-400">
-                        {category.skills.length} Items
-                      </span>
-                    </div>
-
-                    <p className="text-zinc-600 text-xs sm:text-sm mb-5 font-normal">
-                      {category.description}
-                    </p>
-
-                    {/* Skill Items List */}
-                    <div className="space-y-3.5">
-                      {category.skills.map((skill) => (
-                        <div key={skill.name} className="space-y-1.5">
-                          <div className="flex items-center justify-between text-xs">
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-[#111111]">{skill.name}</span>
-                              <span className="text-[10px] text-zinc-400 hidden sm:inline">· {skill.detail}</span>
-                            </div>
-                            <span className="font-mono-code font-bold text-zinc-600 text-[11px]">
-                              {skill.percentage}%
+          <div ref={gridRef} className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8 md:mb-10">
+            {filteredCategories.map((category) => (
+              <div key={category.id} className="skill-category-card">
+                <InteractiveTilt maxTilt={4} scale={1.01} className="h-full">
+                  <div className="h-full bg-white rounded-3xl p-5 sm:p-7 border border-black/[0.08] hover:border-black/30 transition-all duration-300 shadow-sm flex flex-col justify-between">
+                    <div>
+                      {/* Category Header */}
+                      <div className="flex items-center justify-between pb-3.5 mb-5 border-b border-black/[0.06]">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs">
+                            {category.id === "frontend" && <Code2 className="w-5 h-5" />}
+                            {category.id === "backend" && <Server className="w-5 h-5" />}
+                            {category.id === "database" && <Database className="w-5 h-5" />}
+                            {category.id === "tools" && <GitBranch className="w-5 h-5" />}
+                            {category.id === "deployment" && <Cloud className="w-5 h-5" />}
+                            {category.id === "ai_ml" && <Brain className="w-5 h-5" />}
+                          </div>
+                          <div>
+                            <h3 className="font-display text-[#111111] text-lg sm:text-xl font-bold">
+                              {category.title}
+                            </h3>
+                            <span className="text-xs text-zinc-500 font-medium">
+                              {category.badge}
                             </span>
                           </div>
-
-                          {/* Minimalist Progress Track */}
-                          <div className="w-full h-1.5 rounded-full bg-[#EAEAEA] overflow-hidden">
-                            <div
-                              className="h-full rounded-full bg-[#111111] transition-all duration-700 ease-out"
-                              style={{ width: `${skill.percentage}%` }}
-                            />
-                          </div>
                         </div>
-                      ))}
+
+                        <span className="font-mono-code text-xs font-bold text-zinc-400">
+                          {category.skills.length} Items
+                        </span>
+                      </div>
+
+                      <p className="text-zinc-600 text-xs sm:text-sm mb-5 font-normal">
+                        {category.description}
+                      </p>
+
+                      {/* Skill Items List with GSAP Animated Progress Bars */}
+                      <div className="space-y-3.5">
+                        {category.skills.map((skill) => (
+                          <div key={skill.name} className="space-y-1.5">
+                            <div className="flex items-center justify-between text-xs">
+                              <div className="flex items-center gap-2">
+                                <span className="font-bold text-[#111111]">{skill.name}</span>
+                                <span className="text-[10px] text-zinc-400 hidden sm:inline">· {skill.detail}</span>
+                              </div>
+                              <span className="font-mono-code font-bold text-zinc-600 text-[11px]">
+                                {skill.percentage}%
+                              </span>
+                            </div>
+
+                            {/* Minimalist Progress Track with animated fill */}
+                            <div className="w-full h-1.5 rounded-full bg-[#EAEAEA] overflow-hidden">
+                              <div
+                                className="skill-progress-bar h-full rounded-full bg-[#111111] will-change-[width]"
+                                data-percentage={skill.percentage}
+                                style={{ width: "0%" }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-
-                </div>
-              </Reveal>
+                </InteractiveTilt>
+              </div>
             ))}
           </div>
         )}
 
         {/* Daily Developer Toolchain Strip */}
-        <Reveal direction="up" delay={300}>
-          <div className="bg-white rounded-3xl p-5 sm:p-7 border border-black/[0.08] shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 mb-5 border-b border-black/[0.06] gap-2">
-              <div>
-                <span className="text-zinc-500 text-[11px] font-bold uppercase tracking-wider block mb-0.5">
-                  Production Workflows
-                </span>
-                <h4 className="font-display text-[#111111] text-base sm:text-lg font-bold">
-                  Daily Engineering Toolchain & Environments
-                </h4>
-              </div>
-              <span className="text-xs text-zinc-500 font-medium">Standard Agile & Git Flow</span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5 sm:gap-3">
-              {dailyToolchain.map((tool) => (
-                <div
-                  key={tool.name}
-                  className="p-2.5 sm:p-3 rounded-xl bg-[#F8F8F9] border border-black/[0.06] text-center hover:border-black/20 hover:bg-white hover:-translate-y-0.5 transition-all duration-200"
-                >
-                  <p className="text-[#111111] text-xs font-bold truncate">{tool.name}</p>
-                  <p className="text-zinc-500 text-[10px] mt-0.5 truncate">{tool.category}</p>
+        <div ref={toolchainRef}>
+          <InteractiveTilt maxTilt={3} scale={1.008}>
+            <div className="bg-white rounded-3xl p-5 sm:p-7 border border-black/[0.08] shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 mb-5 border-b border-black/[0.06] gap-2">
+                <div>
+                  <span className="text-zinc-500 text-[11px] font-bold uppercase tracking-wider block mb-0.5">
+                    Production Workflows
+                  </span>
+                  <h4 className="font-display text-[#111111] text-base sm:text-lg font-bold">
+                    Daily Engineering Toolchain & Environments
+                  </h4>
                 </div>
-              ))}
+                <span className="text-xs text-zinc-500 font-medium">Standard Agile & Git Flow</span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5 sm:gap-3">
+                {dailyToolchain.map((tool) => (
+                  <div
+                    key={tool.name}
+                    className="p-2.5 sm:p-3 rounded-xl bg-[#F8F8F9] border border-black/[0.06] text-center hover:border-black/20 hover:bg-white hover:-translate-y-0.5 transition-all duration-200"
+                  >
+                    <p className="text-[#111111] text-xs font-bold truncate">{tool.name}</p>
+                    <p className="text-zinc-500 text-[10px] mt-0.5 truncate">{tool.category}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </Reveal>
+          </InteractiveTilt>
+        </div>
 
       </div>
     </section>

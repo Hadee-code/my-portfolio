@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { 
   ExternalLink, 
   Star, 
@@ -15,10 +17,12 @@ import {
 } from "lucide-react";
 import { GithubIcon } from "./SocialIcons";
 import profileData from "../data/profileData";
-import Reveal from "./Reveal";
 import { useToast } from "./ToastContext";
+import InteractiveTilt from "./InteractiveTilt";
 
-function Portfolio() {
+gsap.registerPlugin(ScrollTrigger);
+
+export function Portfolio() {
   const { projects } = profileData;
   const { addToast } = useToast();
   
@@ -29,6 +33,10 @@ function Portfolio() {
     3: "preview",
     4: "preview",
   });
+
+  const sectionRef = useRef(null);
+  const headerRef = useRef(null);
+  const gridRef = useRef(null);
 
   // Interactive mockup state for Amanah (likes toggle)
   const [amanahLiked, setAmanahLiked] = useState(false);
@@ -47,6 +55,58 @@ function Portfolio() {
     activeFilter === "All"
       ? projects
       : projects.filter((project) => project.category === activeFilter);
+
+  // GSAP ScrollTrigger Reveal
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion || !sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Header entrance
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current.children,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+
+      // Project cards staggered reveal
+      if (gridRef.current) {
+        const cards = gridRef.current.querySelectorAll(".project-card-item");
+        gsap.fromTo(
+          cards,
+          { opacity: 0, y: 50, scale: 0.96 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.85,
+            stagger: 0.18,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: gridRef.current,
+              start: "top 82%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [activeFilter]);
 
   const handleTabChange = (projectId, tab) => {
     setActiveTabByProject((prev) => ({ ...prev, [projectId]: tab }));
@@ -316,29 +376,27 @@ function Portfolio() {
   };
 
   return (
-    <section id="showcase" className="w-full bg-[#F3F3F3] text-[#111111] px-6 md:px-12 lg:px-16 py-14 md:py-18 border-t border-black/[0.06] relative overflow-hidden bg-grid-pattern">
+    <section 
+      ref={sectionRef}
+      id="showcase" 
+      className="w-full bg-[#F3F3F3] text-[#111111] px-6 md:px-12 lg:px-16 py-14 md:py-18 border-t border-black/[0.06] relative overflow-hidden bg-grid-pattern"
+    >
       <div className="w-full max-w-[1400px] mx-auto relative z-10">
         
         {/* Section Heading */}
-        <div className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
-          <Reveal direction="down" delay={100}>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] mb-3 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-[#111111]" />
-              <span className="text-[#111111] text-xs font-bold uppercase tracking-wider">Engineering Showcase</span>
-            </div>
-          </Reveal>
+        <div ref={headerRef} className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] mb-3 shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-[#111111]" />
+            <span className="text-[#111111] text-xs font-bold uppercase tracking-wider">Engineering Showcase</span>
+          </div>
           
-          <Reveal direction="clip-up" delay={200}>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#111111]">
-              Featured <span className="font-light italic text-zinc-500">Projects</span>
-            </h2>
-          </Reveal>
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#111111]">
+            Featured <span className="font-light italic text-zinc-500">Projects</span>
+          </h2>
 
-          <Reveal direction="up" delay={300}>
-            <p className="text-zinc-600 text-sm sm:text-base mt-3 leading-relaxed font-normal">
-              Full-stack production web applications, database architectures, and responsive user interfaces engineered with modern stacks.
-            </p>
-          </Reveal>
+          <p className="text-zinc-600 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+            Full-stack production web applications, database architectures, and responsive user interfaces engineered with modern stacks.
+          </p>
 
           {/* Filter Tabs */}
           <div className="flex flex-wrap justify-center gap-2 sm:gap-2.5 mt-6 sm:mt-7">
@@ -352,7 +410,7 @@ function Portfolio() {
                   onClick={() => setActiveFilter(filter)}
                   className={`px-4 sm:px-4.5 py-1.5 sm:py-2 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     isActive
-                      ? "bg-[#111111] text-white shadow-xs font-semibold"
+                      ? "bg-[#111111] text-white shadow-xs font-semibold scale-105"
                       : "bg-white text-zinc-700 hover:text-black hover:bg-black/[0.04] border border-black/[0.08] shadow-xs"
                   }`}
                 >
@@ -370,149 +428,150 @@ function Portfolio() {
           </div>
         </div>
 
-        {/* Modern Project Bento Cards with Browser Frames & In-Card Tab Switchers */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-          {filteredProjects.map((project, index) => {
+        {/* Modern Project Bento Cards with 3D Tilt & Interactive Sandboxes */}
+        <div ref={gridRef} className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+          {filteredProjects.map((project) => {
             const activeTab = activeTabByProject[project.id] || "preview";
 
             return (
-              <Reveal key={project.id} direction="up" delay={100 * (index % 2 + 1)}>
-                <div className="group h-full bg-white rounded-3xl border border-black/[0.08] hover:border-black/30 transition-all duration-300 ease-out flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1">
-                  
-                  {/* Top Mac-Style Window Frame Header */}
-                  <div className="px-5 sm:px-6 py-3 bg-[#F8F8F9] border-b border-black/[0.06] flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 inline-block" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-zinc-400 inline-block" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#111111] inline-block" />
-                      <div className="ml-2 flex items-center gap-1.5 bg-white px-2.5 py-0.5 rounded-full border border-black/[0.08] text-zinc-600 text-[10px] sm:text-[11px] font-mono-code truncate max-w-[150px] sm:max-w-xs shadow-xs">
-                        <Lock className="w-2.5 h-2.5 text-zinc-500" />
-                        <span>hadee.dev/{project.title.toLowerCase().replace(/[^a-z0-9]/g, "-")}</span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#EFEFEF] text-zinc-800 border border-black/[0.06]">
-                        {project.category}
-                      </span>
-                      {project.featured && (
-                        <span className="text-[11px] font-medium text-amber-800 flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                          <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
-                          <span>Featured</span>
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Main Project Card Content */}
-                  <div className="p-5 sm:p-7 flex-1 flex flex-col justify-between">
+              <div key={project.id} className="project-card-item">
+                <InteractiveTilt maxTilt={4} scale={1.01} className="h-full">
+                  <div className="group h-full bg-white rounded-3xl border border-black/[0.08] hover:border-black/30 transition-all duration-300 ease-out flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)]">
                     
-                    <div>
-                      {/* Title & Subtitle */}
-                      <p className="text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-1">
-                        {project.subtitle}
-                      </p>
-                      <h3 className="font-display text-[#111111] text-xl sm:text-2xl font-bold mb-2 group-hover:text-black transition-colors">
-                        {project.title}
-                      </h3>
-                      <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed mb-4 font-normal">
-                        {project.description}
-                      </p>
-
-                      {/* Interactive In-Card Tab Navigator */}
-                      <div className="flex items-center gap-2 pb-3 mb-4 border-b border-black/[0.06]">
-                        <button
-                          onClick={() => handleTabChange(project.id, "preview")}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
-                            activeTab === "preview"
-                              ? "bg-[#111111] text-white shadow-xs font-semibold"
-                              : "bg-[#F8F8F9] text-zinc-700 hover:text-black hover:bg-[#F0F0F0] border border-black/[0.06]"
-                          }`}
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>Interactive Simulator</span>
-                        </button>
-
-                        <button
-                          onClick={() => handleTabChange(project.id, "highlights")}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
-                            activeTab === "highlights"
-                              ? "bg-[#111111] text-white shadow-xs font-semibold"
-                              : "bg-[#F8F8F9] text-zinc-700 hover:text-black hover:bg-[#F0F0F0] border border-black/[0.06]"
-                          }`}
-                        >
-                          <ListOrdered className="w-3.5 h-3.5" />
-                          <span>Architecture Highlights</span>
-                        </button>
+                    {/* Top Mac-Style Window Frame Header */}
+                    <div className="px-5 sm:px-6 py-3 bg-[#F8F8F9] border-b border-black/[0.06] flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 inline-block" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-zinc-400 inline-block" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#111111] inline-block" />
+                        <div className="ml-2 flex items-center gap-1.5 bg-white px-2.5 py-0.5 rounded-full border border-black/[0.08] text-zinc-600 text-[10px] sm:text-[11px] font-mono-code truncate max-w-[150px] sm:max-w-xs shadow-xs">
+                          <Lock className="w-2.5 h-2.5 text-zinc-500" />
+                          <span>hadee.dev/{project.title.toLowerCase().replace(/[^a-z0-9]/g, "-")}</span>
+                        </div>
                       </div>
 
-                      {/* Tab 1: Interactive Simulator */}
-                      {activeTab === "preview" && (
-                        <div className="mb-4 animate-fadeIn">
-                          {renderProjectMockup(project.id)}
-                        </div>
-                      )}
-
-                      {/* Tab 2: Key Deliverables List */}
-                      {activeTab === "highlights" && (
-                        <div className="bg-[#F8F8F9] rounded-2xl p-4 sm:p-5 border border-black/[0.08] mb-4 shadow-xs">
-                          <p className="text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-2.5">
-                            Key Architecture Achievements
-                          </p>
-                          <ul className="space-y-2">
-                            {project.features.map((feat, idx) => (
-                              <li key={idx} className="flex items-start gap-2.5 text-xs text-zinc-700">
-                                <CheckCircle2 className="w-3.5 h-3.5 text-zinc-900 shrink-0 mt-0.5" />
-                                <span>{feat}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Tech Stack Chips */}
-                    <div className="mt-3.5 pt-3.5 border-t border-black/[0.06]">
-                      <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-wider mb-2">Technologies Used</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {project.technologies.map((tech) => (
-                          <span
-                            key={tech}
-                            className="px-2.5 py-1 rounded-lg text-xs font-medium bg-[#F8F8F9] text-zinc-800 border border-black/[0.06] group-hover:border-black/20 transition-colors"
-                          >
-                            {tech}
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#EFEFEF] text-zinc-800 border border-black/[0.06]">
+                          {project.category}
+                        </span>
+                        {project.featured && (
+                          <span className="text-[11px] font-medium text-amber-800 flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                            <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                            <span>Featured</span>
                           </span>
-                        ))}
+                        )}
                       </div>
                     </div>
 
+                    {/* Main Project Card Content */}
+                    <div className="p-5 sm:p-7 flex-1 flex flex-col justify-between">
+                      <div>
+                        {/* Title & Subtitle */}
+                        <p className="text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-1">
+                          {project.subtitle}
+                        </p>
+                        <h3 className="font-display text-[#111111] text-xl sm:text-2xl font-bold mb-2 group-hover:text-black transition-colors">
+                          {project.title}
+                        </h3>
+                        <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed mb-4 font-normal">
+                          {project.description}
+                        </p>
+
+                        {/* Interactive In-Card Tab Navigator */}
+                        <div className="flex items-center gap-2 pb-3 mb-4 border-b border-black/[0.06]">
+                          <button
+                            onClick={() => handleTabChange(project.id, "preview")}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                              activeTab === "preview"
+                                ? "bg-[#111111] text-white shadow-xs font-semibold"
+                                : "bg-[#F8F8F9] text-zinc-700 hover:text-black hover:bg-[#F0F0F0] border border-black/[0.06]"
+                            }`}
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>Interactive Simulator</span>
+                          </button>
+
+                          <button
+                            onClick={() => handleTabChange(project.id, "highlights")}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                              activeTab === "highlights"
+                                ? "bg-[#111111] text-white shadow-xs font-semibold"
+                                : "bg-[#F8F8F9] text-zinc-700 hover:text-black hover:bg-[#F0F0F0] border border-black/[0.06]"
+                            }`}
+                          >
+                            <ListOrdered className="w-3.5 h-3.5" />
+                            <span>Architecture Highlights</span>
+                          </button>
+                        </div>
+
+                        {/* Tab 1: Interactive Simulator */}
+                        {activeTab === "preview" && (
+                          <div className="mb-4">
+                            {renderProjectMockup(project.id)}
+                          </div>
+                        )}
+
+                        {/* Tab 2: Key Deliverables List */}
+                        {activeTab === "highlights" && (
+                          <div className="bg-[#F8F8F9] rounded-2xl p-4 sm:p-5 border border-black/[0.08] mb-4 shadow-xs">
+                            <p className="text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-2.5">
+                              Key Architecture Achievements
+                            </p>
+                            <ul className="space-y-2">
+                              {project.features.map((feat, idx) => (
+                                <li key={idx} className="flex items-start gap-2.5 text-xs text-zinc-700">
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-zinc-900 shrink-0 mt-0.5" />
+                                  <span>{feat}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Tech Stack Chips */}
+                      <div className="mt-3.5 pt-3.5 border-t border-black/[0.06]">
+                        <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-wider mb-2">Technologies Used</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {project.technologies.map((tech) => (
+                            <span
+                              key={tech}
+                              className="px-2.5 py-1 rounded-lg text-xs font-medium bg-[#F8F8F9] text-zinc-800 border border-black/[0.06] group-hover:border-black/20 hover:-translate-y-0.5 transition-all"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                    </div>
+
+                    {/* Card Footer: Dual Actions */}
+                    <div className="px-5 sm:px-7 py-3.5 border-t border-black/[0.06] bg-[#FAFAFA] flex items-center justify-between gap-4">
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-zinc-800 hover:text-black transition-colors"
+                      >
+                        <GithubIcon className="w-4 h-4 text-zinc-700" />
+                        <span>Explore Repository</span>
+                      </a>
+
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3.5 py-1.5 rounded-full bg-[#111111] text-white hover:bg-neutral-800 transition-all text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95"
+                      >
+                        <span>View Code</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+
                   </div>
-
-                  {/* Card Footer: Dual Actions */}
-                  <div className="px-5 sm:px-7 py-3.5 border-t border-black/[0.06] bg-[#FAFAFA] flex items-center justify-between gap-4">
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-zinc-800 hover:text-black transition-colors"
-                    >
-                      <GithubIcon className="w-4 h-4 text-zinc-700" />
-                      <span>Explore Repository</span>
-                    </a>
-
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3.5 py-1.5 rounded-full bg-[#111111] text-white hover:bg-neutral-800 transition-all text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-xs"
-                    >
-                      <span>View Code</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  </div>
-
-                </div>
-              </Reveal>
+                </InteractiveTilt>
+              </div>
             );
           })}
         </div>

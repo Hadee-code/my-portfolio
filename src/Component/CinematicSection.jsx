@@ -1,13 +1,16 @@
 import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 /**
  * CinematicSection
- * Wraps page sections in a 3D, multi-plane parallax stage with:
- * - Parallax Layers: Background moves at a slower rate (0.35x) while content moves faster (1.0x).
- * - Subtle Zoom & Blur-to-Sharp Transitions: Content emerges with subtle camera push-in and focus rack.
- * - Directional 3D Depth: Sequence rotates through top-to-bottom, left-to-right, right-to-left, bottom-to-top.
- * - Directional Radiant Beams: Illuminates opening seam during entry.
- * - Physics Damping: 60-120 FPS requestAnimationFrame interpolation.
+ * Wraps page sections in a GSAP ScrollTrigger-driven 3D multi-plane parallax stage:
+ * - Parallax Layer: Background moves at a slower rate (0.25x) while content moves at full speed.
+ * - Directional 3D Entry & Exit: Smooth perspective tilt and scale-to-focus.
+ * - Directional Radiant Horizon Beam: Illuminates the entry seam.
+ * - GPU Accelerated & Memory-leak safe via gsap.context().
  */
 export function CinematicSection({
   children,
@@ -16,265 +19,163 @@ export function CinematicSection({
   enableEnter = true,
   enableExit = true,
   enterDirection = "top-to-bottom", // "top-to-bottom" | "left-to-right" | "right-to-left" | "bottom-to-top"
-  exitDirection = "top-to-bottom",  // "top-to-bottom" | "left-to-right" | "right-to-left" | "bottom-to-top"
+  exitDirection = "top-to-bottom",
   className = "",
 }) {
   const containerRef = useRef(null);
   const bgRef = useRef(null);
   const contentRef = useRef(null);
-  const curtainRef = useRef(null);
   const glowRef = useRef(null);
+  const curtainRef = useRef(null);
 
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const container = containerRef.current;
     const bg = bgRef.current;
     const content = contentRef.current;
-    const curtain = curtainRef.current;
     const glow = glowRef.current;
-    if (!container || !content) return;
+    const curtain = curtainRef.current;
 
-    // Accessibility: respects reduced motion preference
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
+    if (!container || !content || prefersReducedMotion) {
+      return;
+    }
 
-    let targetExit = 0;
-    let targetEnter = enableEnter ? 0 : 1;
-    let currentExit = 0;
-    let currentEnter = enableEnter ? 0 : 1;
-    let animationFrameId = null;
-    let isRunning = false;
-
-    const updateTargets = () => {
-      const rect = container.getBoundingClientRect();
-      const windowHeight = window.innerHeight || 800;
-      const elementHeight = rect.height || windowHeight;
-
-      // 1. Calculate Enter Progress (section entering from bottom of viewport)
-      if (enableEnter) {
-        if (rect.top >= windowHeight) {
-          targetEnter = 0;
-        } else if (rect.top <= 0) {
-          targetEnter = 1;
-        } else {
-          const enterDistance = windowHeight * 0.9;
-          targetEnter = Math.min(1, Math.max(0, (windowHeight - rect.top) / enterDistance));
-        }
-      } else {
-        targetEnter = 1;
-      }
-
-      // 2. Calculate Exit Progress (section exiting top of viewport)
-      if (enableExit) {
-        const transitionDistance = Math.min(windowHeight * 0.85, elementHeight);
-
-        if (elementHeight > windowHeight) {
-          // Tall sections: exit begins when bottom approaches viewport
-          if (rect.bottom >= windowHeight) {
-            targetExit = 0;
-          } else {
-            targetExit = Math.min(1, Math.max(0, (windowHeight - rect.bottom) / transitionDistance));
-          }
-        } else {
-          // Standard sections: exit begins when top passes 0
-          if (rect.top >= 0) {
-            targetExit = 0;
-          } else {
-            targetExit = Math.min(1, Math.max(0, -rect.top / transitionDistance));
-          }
-        }
-      } else {
-        targetExit = 0;
-      }
-
-      startLoop();
-    };
-
-    const render = () => {
-      // Smooth linear interpolation (lerp) with refined physical damping
-      const damping = 0.14;
-      currentExit += (targetExit - currentExit) * damping;
-      currentEnter += (targetEnter - currentEnter) * damping;
-
-      const diffExit = Math.abs(targetExit - currentExit);
-      const diffEnter = Math.abs(targetEnter - currentEnter);
-
-      if (diffExit < 0.001) currentExit = targetExit;
-      if (diffEnter < 0.001) currentEnter = targetEnter;
-
-      // --- Content Layer Variables (Faster / Full Motion) ---
-      let contentScale = 1;
-      let contentTX = 0;
-      let contentTY = 0;
-      let contentTZ = 0;
-      let rotateX = 0;
-      let rotateY = 0;
-      let contentBlur = 0;
-      let contentBrightness = 1;
-      let borderRadius = 0;
-
-      // --- Background Parallax Layer Variables (Slower Motion) ---
-      let bgTX = 0;
-      let bgTY = 0;
-      let bgTZ = 0;
-      let bgScale = 1;
-
-      // --- Overlay & Glow Beams ---
-      let curtainOpacity = 0;
-      let glowOpacity = 0;
-      let transformOrigin = "center center";
-
-      const isMobile = window.innerWidth < 768;
-
-      // 1. Exiting State (Closing into Depth)
-      if (currentExit > 0.001) {
-        // Content sinks back with subtle zoom-out and blur
-        contentScale = isMobile ? 1 : 1 - currentExit * 0.06;
-        contentTZ = isMobile ? 0 : -currentExit * 120;
-        contentBlur = isMobile ? 0 : currentExit * 4;
-        contentBrightness = 1 - currentExit * 0.35;
-        borderRadius = currentExit * 24;
-        curtainOpacity = currentExit * 0.6;
-
-        // Background layer stays deeper and moves slower
-        bgScale = 1 - currentExit * 0.03;
-        bgTZ = isMobile ? 0 : -currentExit * 50;
-
-        if (!isMobile) {
-          switch (exitDirection) {
-            case "left-to-right":
-              transformOrigin = "right center";
-              contentTX = currentExit * 50;
-              rotateY = currentExit * 2.5;
-              bgTX = currentExit * 16;
-              break;
-            case "right-to-left":
-              transformOrigin = "left center";
-              contentTX = -currentExit * 50;
-              rotateY = -currentExit * 2.5;
-              bgTX = -currentExit * 16;
-              break;
-            case "bottom-to-top":
-              transformOrigin = "center top";
-              contentTY = -currentExit * 45;
-              rotateX = -currentExit * 2;
-              bgTY = -currentExit * 14;
-              break;
-            case "top-to-bottom":
-            default:
-              transformOrigin = "center bottom";
-              contentTY = currentExit * 50;
-              rotateX = currentExit * 2;
-              bgTY = currentExit * 16;
-              break;
-          }
-        }
-      }
-      // 2. Entering State (Opening from Assigned Direction with Parallax & Blur-to-Sharp)
-      else if (enableEnter && currentEnter < 0.999) {
-        const invEnter = 1 - currentEnter;
-
-        // Subtle Zoom: scales from 0.97 in to 1.0
-        contentScale = isMobile ? 1 : 0.97 + currentEnter * 0.03;
-        contentBlur = isMobile ? 0 : invEnter * 3.5;
-        contentBrightness = 0.85 + currentEnter * 0.15;
-        glowOpacity = Math.sin(currentEnter * Math.PI) * 0.8;
-        bgScale = 1.03 - currentEnter * 0.03;
-
-        if (!isMobile) {
-          switch (enterDirection) {
-            case "left-to-right":
-              transformOrigin = "left center";
-              contentTX = -invEnter * 55;
-              rotateY = -invEnter * 3.5;
-              bgTX = -invEnter * 18;
-              break;
-            case "right-to-left":
-              transformOrigin = "right center";
-              contentTX = invEnter * 55;
-              rotateY = invEnter * 3.5;
-              bgTX = invEnter * 18;
-              break;
-            case "bottom-to-top":
-              transformOrigin = "center bottom";
-              contentTY = invEnter * 50;
-              rotateX = invEnter * 2.5;
-              bgTY = invEnter * 15;
-              break;
-            case "top-to-bottom":
-            default:
-              transformOrigin = "center top";
-              contentTY = -invEnter * 50;
-              rotateX = -invEnter * 2.5;
-              bgTY = -invEnter * 15;
-              break;
-          }
-        }
-      }
-
-      // Apply transforms to Foreground Content Layer
-      content.style.transformOrigin = transformOrigin;
-      content.style.transform = `perspective(1400px) scale(${contentScale.toFixed(4)}) translate3d(${contentTX.toFixed(1)}px, ${contentTY.toFixed(1)}px, ${contentTZ.toFixed(1)}px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
-      content.style.filter = contentBlur > 0.08 || contentBrightness < 0.99
-        ? `blur(${contentBlur.toFixed(1)}px) brightness(${contentBrightness.toFixed(2)})`
-        : "none";
-      content.style.borderRadius = borderRadius > 0.5 ? `${borderRadius.toFixed(1)}px` : "0px";
-
-      // Apply slower Parallax transforms to Background Layer
+    const ctx = gsap.context(() => {
+      // Background Parallax: slower subtle drift
       if (bg) {
-        bg.style.transform = `translate3d(${bgTX.toFixed(1)}px, ${bgTY.toFixed(1)}px, ${bgTZ.toFixed(1)}px) scale(${bgScale.toFixed(4)})`;
+        gsap.fromTo(
+          bg,
+          { yPercent: -8 },
+          {
+            yPercent: 8,
+            ease: "none",
+            scrollTrigger: {
+              trigger: container,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1.2,
+            },
+          }
+        );
       }
 
-      if (curtain) {
-        curtain.style.opacity = curtainOpacity.toFixed(3);
+      // Section Entrance Animation
+      if (enableEnter) {
+        let fromVars = {
+          opacity: 0.85,
+          scale: 0.97,
+          duration: 1,
+          ease: "power3.out",
+        };
+
+        switch (enterDirection) {
+          case "left-to-right":
+            fromVars.x = -40;
+            fromVars.rotateY = -2;
+            break;
+          case "right-to-left":
+            fromVars.x = 40;
+            fromVars.rotateY = 2;
+            break;
+          case "bottom-to-top":
+            fromVars.y = 45;
+            fromVars.rotateX = 2;
+            break;
+          case "top-to-bottom":
+          default:
+            fromVars.y = -30;
+            fromVars.rotateX = -1.5;
+            break;
+        }
+
+        gsap.fromTo(
+          content,
+          fromVars,
+          {
+            opacity: 1,
+            scale: 1,
+            x: 0,
+            y: 0,
+            rotateX: 0,
+            rotateY: 0,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: container,
+              start: "top 88%",
+              end: "top 25%",
+              scrub: 0.8,
+            },
+          }
+        );
+
+        // Radiant Beam pulse upon entry
+        if (glow) {
+          gsap.fromTo(
+            glow,
+            { opacity: 0 },
+            {
+              opacity: 0.9,
+              ease: "power2.inOut",
+              scrollTrigger: {
+                trigger: container,
+                start: "top 85%",
+                end: "top 45%",
+                scrub: 0.8,
+                onLeave: () => gsap.to(glow, { opacity: 0, duration: 0.5 }),
+              },
+            }
+          );
+        }
       }
 
-      if (glow) {
-        glow.style.opacity = glowOpacity.toFixed(3);
+      // Section Exit Depth: smoothly sinks into depth as next section approaches
+      if (enableExit) {
+        gsap.to(content, {
+          scale: 0.975,
+          y: -25,
+          opacity: 0.9,
+          ease: "power2.in",
+          scrollTrigger: {
+            trigger: container,
+            start: "bottom 55%",
+            end: "bottom top",
+            scrub: 0.8,
+          },
+        });
+
+        if (curtain) {
+          gsap.fromTo(
+            curtain,
+            { opacity: 0 },
+            {
+              opacity: 0.25,
+              ease: "none",
+              scrollTrigger: {
+                trigger: container,
+                start: "bottom 60%",
+                end: "bottom top",
+                scrub: 0.8,
+              },
+            }
+          );
+        }
       }
+    }, containerRef);
 
-      if (diffExit >= 0.001 || diffEnter >= 0.001) {
-        animationFrameId = requestAnimationFrame(render);
-      } else {
-        isRunning = false;
-      }
-    };
-
-    const startLoop = () => {
-      if (!isRunning) {
-        isRunning = true;
-        animationFrameId = requestAnimationFrame(render);
-      }
-    };
-
-    const onScroll = () => updateTargets();
-    const onResize = () => updateTargets();
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize, { passive: true });
-
-    updateTargets();
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-    };
+    return () => ctx.revert();
   }, [enableEnter, enableExit, enterDirection, exitDirection]);
 
-  // Determine Beam Styling based on enterDirection (Subtle Editorial Seam)
   const getGlowBeamClasses = () => {
     switch (enterDirection) {
       case "left-to-right":
-        return "absolute top-0 bottom-0 left-0 w-[1.5px] bg-gradient-to-b from-transparent via-neutral-400 to-transparent shadow-[0_0_15px_rgba(0,0,0,0.12)]";
+        return "absolute top-0 bottom-0 left-0 w-[2px] bg-gradient-to-b from-transparent via-neutral-400 to-transparent shadow-[0_0_12px_rgba(0,0,0,0.12)]";
       case "right-to-left":
-        return "absolute top-0 bottom-0 right-0 w-[1.5px] bg-gradient-to-b from-transparent via-neutral-400 to-transparent shadow-[0_0_15px_rgba(0,0,0,0.12)]";
+        return "absolute top-0 bottom-0 right-0 w-[2px] bg-gradient-to-b from-transparent via-neutral-400 to-transparent shadow-[0_0_12px_rgba(0,0,0,0.12)]";
       case "bottom-to-top":
-        return "absolute bottom-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-neutral-400 to-transparent shadow-[0_0_15px_rgba(0,0,0,0.12)]";
+        return "absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-neutral-400 to-transparent shadow-[0_0_12px_rgba(0,0,0,0.12)]";
       case "top-to-bottom":
       default:
-        return "absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-neutral-400 to-transparent shadow-[0_0_15px_rgba(0,0,0,0.12)]";
+        return "absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-neutral-400 to-transparent shadow-[0_0_12px_rgba(0,0,0,0.12)]";
     }
   };
 
@@ -283,11 +184,8 @@ export function CinematicSection({
       ref={containerRef}
       id={id}
       className={`relative w-full overflow-x-clip ${className}`}
-      style={{
-        zIndex,
-      }}
+      style={{ zIndex }}
     >
-      {/* 3D Hardware Accelerated Stage */}
       <div
         className="w-full relative overflow-hidden"
         style={{
@@ -295,46 +193,36 @@ export function CinematicSection({
           transformStyle: "preserve-3d",
         }}
       >
-        {/* PARALLAX LAYER 1: Background Atmospheric Layer (moves at slower speed) */}
+        {/* PARALLAX LAYER 1: Background Atmospheric Layer */}
         <div
           ref={bgRef}
           className="absolute inset-0 pointer-events-none -z-10 overflow-hidden"
-          style={{
-            willChange: "transform",
-            backfaceVisibility: "hidden",
-          }}
+          style={{ willChange: "transform", backfaceVisibility: "hidden" }}
         >
-          {/* Subtle Ambient Halos that shift with parallax */}
-          <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-black/[0.015] rounded-full blur-3xl" />
-          <div className="absolute bottom-10 right-1/4 w-[550px] h-[550px] bg-black/[0.015] rounded-full blur-3xl" />
+          <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-black/[0.015] rounded-full blur-3xl" />
+          <div className="absolute bottom-10 right-1/4 w-[450px] h-[450px] bg-black/[0.015] rounded-full blur-3xl" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(0,0,0,0.02),transparent_70%)]" />
         </div>
 
-        {/* PARALLAX LAYER 2: Foreground Content Layer (moves at full speed with 3D tilt & zoom) */}
+        {/* PARALLAX LAYER 2: Foreground Content Layer */}
         <div
           ref={contentRef}
-          className="w-full relative overflow-hidden transition-shadow duration-300"
-          style={{
-            willChange: "transform, filter, border-radius",
-            backfaceVisibility: "hidden",
-          }}
+          className="w-full relative overflow-hidden will-change-transform"
+          style={{ backfaceVisibility: "hidden" }}
         >
-          {/* Directional Radiant Horizon Beam */}
           {enableEnter && (
             <div
               ref={glowRef}
-              className={`${getGlowBeamClasses()} pointer-events-none z-30 opacity-0 transition-opacity`}
+              className={`${getGlowBeamClasses()} pointer-events-none z-30 opacity-0`}
             />
           )}
 
-          {/* Section Main Content */}
           {children}
 
-          {/* Closing Subtle Editorial Vignette Curtain */}
           {enableExit && (
             <div
               ref={curtainRef}
-              className="absolute inset-0 bg-gradient-to-b from-black/[0.02] via-black/[0.05] to-black/[0.08] pointer-events-none z-40 opacity-0 transition-opacity"
+              className="absolute inset-0 bg-black/10 pointer-events-none z-40 opacity-0"
             />
           )}
         </div>
