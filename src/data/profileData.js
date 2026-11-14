@@ -37,7 +37,7 @@ const profileData = {
   ],
 
   stats: [
-    { value: "1+ Years", label: "Production Experience" },
+    { value: "1+", label: "Years Experience" },
     { value: "15+", label: "Projects Delivered" },
     { value: "100%", label: "Code Quality Focus" },
   ],

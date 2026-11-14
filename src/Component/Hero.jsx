@@ -75,13 +75,13 @@ function Hero() {
   };
 
   return (
-    <section id="home" className="w-full bg-[#F3F3F3] text-[#111111] px-6 md:px-12 lg:px-16 pt-8 pb-16 md:py-20 relative overflow-hidden bg-grid-pattern">
+    <section id="home" className="w-full bg-[#F3F3F3] text-[#111111] px-6 md:px-12 lg:px-16 pt-6 md:pt-10 pb-14 md:pb-16 relative overflow-hidden bg-grid-pattern">
       
       {/* Background Subtle Ambient Halos */}
       <div className="absolute top-1/4 -left-20 w-[500px] h-[500px] bg-black/[0.02] rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 -right-20 w-[550px] h-[550px] bg-black/[0.02] rounded-full blur-3xl pointer-events-none" />
 
-      <div className="w-full max-w-[1400px] mx-auto flex flex-col lg:flex-row items-stretch justify-between gap-10 lg:gap-14 relative z-10">
+      <div className="w-full max-w-[1400px] mx-auto flex flex-col lg:flex-row items-stretch justify-between gap-8 lg:gap-12 relative z-10">
 
         {/* Left Vertical Editorial Rail (Matches Reference Design) */}
         <div className="hidden xl:flex flex-col items-center justify-between py-4 pr-6 border-r border-black/[0.08] select-none text-[11px] font-semibold text-zinc-400 uppercase tracking-[0.2em]">
@@ -98,15 +98,14 @@ function Hero() {
         <div className="flex-1 flex flex-col justify-between max-w-[720px] text-left">
           
           <div>
-            {/* Top Stats Counters matching reference (*200 Project completed / *50 Startup raised) */}
+            {/* Top Stats Counters matching reference */}
             <Reveal direction="down" delay={100}>
-              <div className="flex flex-wrap items-center gap-8 sm:gap-12 mb-8 pt-2 border-b border-black/[0.06] pb-6">
+              <div className="flex flex-wrap items-center gap-6 sm:gap-10 mb-6 pt-1 border-b border-black/[0.06] pb-5">
                 {stats.map((stat) => (
                   <div key={stat.label} className="group">
-                    <p className="font-display text-3xl sm:text-4xl font-extrabold text-[#111111] tracking-tight flex items-baseline">
-                      <span className="text-zinc-400 font-light text-2xl mr-0.5">*</span>
-                      {stat.value.replace("+", "")}
-                      <span className="text-zinc-500 text-xl font-normal">{stat.value.includes("+") ? "+" : ""}</span>
+                    <p className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#111111] tracking-tight flex items-baseline">
+                      <span className="text-zinc-400 font-light text-xl mr-0.5">*</span>
+                      {stat.value}
                     </p>
                     <p className="text-zinc-500 text-xs font-medium tracking-wide mt-0.5">
                       {stat.label}
@@ -115,9 +114,9 @@ function Hero() {
                 ))}
 
                 <div className="hidden sm:block">
-                  <p className="font-display text-3xl sm:text-4xl font-extrabold text-[#111111] tracking-tight">
-                    <span className="text-zinc-400 font-light text-2xl mr-0.5">*</span>~38
-                    <span className="text-zinc-500 text-xl font-normal">ms</span>
+                  <p className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#111111] tracking-tight flex items-baseline">
+                    <span className="text-zinc-400 font-light text-xl mr-0.5">*</span>~38
+                    <span className="text-zinc-500 text-lg font-normal ml-0.5">ms</span>
                   </p>
                   <p className="text-zinc-500 text-xs font-medium tracking-wide mt-0.5">
                     Avg API Latency
@@ -128,8 +127,8 @@ function Hero() {
 
             {/* Availability & Location Badges */}
             <Reveal direction="fade" delay={150}>
-              <div className="flex flex-wrap items-center gap-2.5 mb-5">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-medium">
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-medium">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
@@ -137,23 +136,23 @@ function Hero() {
                   <span>Available for Engineering Roles</span>
                 </div>
 
-                <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white border border-black/[0.08] text-zinc-600 text-xs font-medium shadow-sm">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-black/[0.08] text-zinc-600 text-xs font-medium shadow-xs">
                   <MapPin className="w-3.5 h-3.5 text-zinc-500" />
                   <span>{location}</span>
                 </div>
               </div>
             </Reveal>
 
-            {/* Giant "Hello" Editorial Headline (Direct visual match to reference) */}
+            {/* Giant "Hello" Editorial Headline */}
             <Reveal direction="clip-up" delay={200}>
-              <h1 className="font-display text-7xl sm:text-8xl md:text-9xl lg:text-[118px] font-normal leading-[0.92] text-[#111111] tracking-tight mb-4 select-none">
+              <h1 className="font-display text-6xl sm:text-7xl md:text-8xl lg:text-[104px] font-normal leading-[0.92] text-[#111111] tracking-tight mb-3 select-none">
                 Hello
               </h1>
             </Reveal>
 
             {/* Signature Tagline: — It's Muhammad Hadee Butt, a Full-Stack & AI Engineer */}
             <Reveal direction="clip-up" delay={280}>
-              <div className="mb-4">
+              <div className="mb-3">
                 <p className="text-xl sm:text-2xl md:text-3xl font-medium text-[#111111] tracking-tight flex items-center gap-2 flex-wrap">
                   <span className="text-zinc-400">—</span>
                   <span>It's <strong className="font-extrabold">{name}</strong>,</span>
@@ -164,11 +163,11 @@ function Hero() {
 
             {/* Dynamic Rotating Role Headline */}
             <Reveal direction="fade" delay={340}>
-              <div className="h-8 flex items-center mb-4">
+              <div className="h-7 flex items-center mb-3">
                 <span className="font-mono-code text-xs sm:text-sm text-zinc-500 mr-2">// Focus:</span>
                 <span
                   className={`font-semibold text-sm sm:text-base text-blue-600 transition-all duration-300 transform ${
-                    fadeRole ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+                    fadeRole ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1.5"
                   }`}
                 >
                   {rotatingRoles[roleIndex]}
@@ -178,14 +177,14 @@ function Hero() {
 
             {/* Tagline Paragraph */}
             <Reveal direction="up" delay={380}>
-              <p className="text-zinc-600 text-sm sm:text-base leading-relaxed mb-6 max-w-xl font-normal">
+              <p className="text-zinc-600 text-sm sm:text-base leading-relaxed mb-5 max-w-xl font-normal">
                 {tagline} Specializing in building resilient end-to-end applications with reusable component hierarchies, optimized database queries, and secure JWT authentication.
               </p>
             </Reveal>
 
             {/* Tech Stack Badges */}
             <Reveal direction="up" delay={420}>
-              <div className="flex flex-wrap items-center gap-2 mb-8">
+              <div className="flex flex-wrap items-center gap-2 mb-6">
                 {[
                   { name: "React 19", icon: <Code2 className="w-3.5 h-3.5 text-zinc-700" /> },
                   { name: "Next.js", icon: <Layers className="w-3.5 h-3.5 text-zinc-700" /> },
@@ -197,7 +196,7 @@ function Hero() {
                 ].map((tech) => (
                   <span
                     key={tech.name}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-black/[0.08] text-zinc-800 text-xs font-medium hover:border-black/30 transition-all shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-black/[0.08] text-zinc-800 text-xs font-medium hover:border-black/30 transition-all shadow-xs"
                   >
                     {tech.icon}
                     <span>{tech.name}</span>
@@ -208,12 +207,12 @@ function Hero() {
 
             {/* Clear Call-To-Action Buttons: View Projects + Contact Me + Download CV */}
             <Reveal direction="up" delay={460}>
-              <div className="flex flex-wrap items-center gap-3 mb-8">
+              <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 mb-6">
                 
                 {/* Primary CTA: View Projects */}
                 <a
                   href="#showcase"
-                  className="bg-[#111111] text-white font-semibold px-7 py-3.5 rounded-full text-xs sm:text-sm hover:bg-neutral-800 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 flex items-center gap-2 shadow-sm group"
+                  className="bg-[#111111] text-white font-semibold px-6 py-3 rounded-full text-xs sm:text-sm hover:bg-neutral-800 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 flex items-center gap-2 shadow-sm group"
                 >
                   <Briefcase className="w-4 h-4 text-zinc-300" />
                   <span>View Projects</span>
@@ -223,7 +222,7 @@ function Hero() {
                 {/* Secondary CTA: Contact Me */}
                 <a
                   href="#footer"
-                  className="border border-black/[0.12] bg-white text-zinc-800 px-6 py-3.5 rounded-full text-xs sm:text-sm font-semibold hover:border-black hover:text-black hover:-translate-y-0.5 active:scale-95 transition-all duration-200 inline-flex items-center gap-2 shadow-sm"
+                  className="border border-black/[0.12] bg-white text-zinc-800 px-5 py-3 rounded-full text-xs sm:text-sm font-semibold hover:border-black hover:text-black hover:-translate-y-0.5 active:scale-95 transition-all duration-200 inline-flex items-center gap-2 shadow-xs"
                 >
                   <Mail className="w-4 h-4 text-zinc-600" />
                   <span>Contact Me</span>
@@ -234,7 +233,7 @@ function Hero() {
                   href={cvFile}
                   download="Muhammad_Hadee_Butt_CV.pdf"
                   onClick={handleDownloadCV}
-                  className="border border-black/[0.12] bg-[#F8F8F9] text-zinc-700 px-5 py-3.5 rounded-full text-xs sm:text-sm font-medium hover:border-black hover:text-black hover:-translate-y-0.5 active:scale-95 transition-all duration-200 inline-flex items-center gap-2 shadow-xs"
+                  className="border border-black/[0.12] bg-[#F8F8F9] text-zinc-700 px-4 py-3 rounded-full text-xs sm:text-sm font-medium hover:border-black hover:text-black hover:-translate-y-0.5 active:scale-95 transition-all duration-200 inline-flex items-center gap-2 shadow-xs"
                 >
                   <Download className="w-4 h-4 text-zinc-500" />
                   <span>Download CV</span>
@@ -247,7 +246,7 @@ function Hero() {
                 <button
                   type="button"
                   onClick={handleCopyEmail}
-                  className="px-4 py-3.5 rounded-full border border-black/[0.1] bg-white text-zinc-700 hover:text-black hover:border-black/30 text-xs sm:text-sm font-medium transition-all flex items-center gap-2 cursor-pointer active:scale-95 shadow-sm"
+                  className="px-3.5 py-3 rounded-full border border-black/[0.1] bg-white text-zinc-700 hover:text-black hover:border-black/30 text-xs sm:text-sm font-medium transition-all flex items-center gap-2 cursor-pointer active:scale-95 shadow-xs"
                   title="Copy email to clipboard"
                 >
                   {copiedEmail ? (
@@ -267,7 +266,7 @@ function Hero() {
 
             {/* Social Profiles Row */}
             <Reveal direction="up" delay={500}>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 <span className="text-xs text-zinc-400 font-medium">Connect:</span>
                 {socials.map((s) => (
                   <a
@@ -276,7 +275,7 @@ function Hero() {
                     target={s.url.startsWith("http") ? "_blank" : undefined}
                     rel={s.url.startsWith("http") ? "noopener noreferrer" : undefined}
                     aria-label={s.label || s.name}
-                    className="w-9 h-9 flex items-center justify-center rounded-full border border-black/[0.08] bg-white text-zinc-700 hover:text-black hover:border-black/30 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 shadow-sm"
+                    className="w-8 h-8 flex items-center justify-center rounded-full border border-black/[0.08] bg-white text-zinc-700 hover:text-black hover:border-black/30 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 shadow-xs"
                   >
                     {getSocialIcon(s.name)}
                   </a>
@@ -286,9 +285,9 @@ function Hero() {
 
           </div>
 
-          {/* Bottom "Scroll down ↓" indicator pointing to Section 02. Engineering Profile */}
+          {/* Bottom "Scroll down ↓" indicator */}
           <Reveal direction="up" delay={550}>
-            <div className="pt-10 mt-6 border-t border-black/[0.06]">
+            <div className="mt-6 pt-4 border-t border-black/[0.06]">
               <a
                 href="#profile"
                 className="inline-flex items-center gap-2 text-xs font-medium text-zinc-500 hover:text-black transition-colors group cursor-pointer"
@@ -302,37 +301,37 @@ function Hero() {
         </div>
 
         {/* Right Column: Monochrome Editorial Portrait Showcase */}
-        <Reveal direction="scale" delay={250} className="flex-1 flex justify-center items-center relative w-full max-w-[460px] lg:max-w-[500px] self-center">
+        <Reveal direction="scale" delay={250} className="flex-1 flex justify-center items-center relative w-full max-w-[440px] lg:max-w-[480px] self-center">
           
           {/* Subtle Ambient Backing Halo */}
           <div className="absolute inset-4 bg-black/[0.03] rounded-3xl blur-2xl -z-10 pointer-events-none" />
 
           {/* Floating Minimal Badge - Top Right */}
-          <div className="absolute -top-3 right-2 sm:-top-4 sm:right-0 z-20 bg-white/95 backdrop-blur-md border border-black/[0.08] px-4 py-2 rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.06)] flex items-center gap-2.5 animate-float-slow">
+          <div className="absolute -top-2.5 right-1 sm:-top-3 sm:right-0 z-20 bg-white/95 backdrop-blur-md border border-black/[0.08] px-3.5 py-1.5 rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.06)] flex items-center gap-2 animate-float-slow">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600" />
             </span>
             <div className="flex flex-col">
-              <span className="text-[#111111] text-xs font-bold leading-tight">Full Stack & AI</span>
-              <span className="text-zinc-500 text-[10px] leading-tight">Production Ready</span>
+              <span className="text-[#111111] text-[11px] font-bold leading-tight">Full Stack & AI</span>
+              <span className="text-zinc-500 text-[9px] leading-tight">Production Ready</span>
             </div>
           </div>
 
           {/* Floating Minimal Badge - Bottom Left */}
-          <div className="absolute -bottom-3 left-2 sm:-bottom-4 sm:left-0 z-20 bg-white/95 backdrop-blur-md border border-black/[0.08] px-4 py-2 rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.06)] flex items-center gap-2.5 animate-float-delayed">
+          <div className="absolute -bottom-2.5 left-1 sm:-bottom-3 sm:left-0 z-20 bg-white/95 backdrop-blur-md border border-black/[0.08] px-3.5 py-1.5 rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.06)] flex items-center gap-2 animate-float-delayed">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
             <div className="flex flex-col">
-              <span className="text-[#111111] text-xs font-bold leading-tight">MERN & Python</span>
-              <span className="text-emerald-700 text-[10px] font-semibold leading-tight">Open to Work</span>
+              <span className="text-[#111111] text-[11px] font-bold leading-tight">MERN & Python</span>
+              <span className="text-emerald-700 text-[9px] font-semibold leading-tight">Open to Work</span>
             </div>
           </div>
 
           {/* Monochromatic Portrait Container */}
-          <div className="relative w-full max-w-[360px] sm:max-w-[410px] rounded-3xl p-2.5 bg-white border border-black/[0.08] shadow-[0_12px_36px_rgba(0,0,0,0.06)] group overflow-hidden">
+          <div className="relative w-full max-w-[340px] sm:max-w-[390px] rounded-3xl p-2.5 bg-white border border-black/[0.08] shadow-[0_12px_36px_rgba(0,0,0,0.06)] group overflow-hidden">
             
             {/* Top Minimal Pill Bar */}
             <div className="absolute top-4 left-6 right-6 z-20 flex items-center justify-between pointer-events-none">
@@ -347,7 +346,7 @@ function Hero() {
               </span>
             </div>
 
-            <div className="relative rounded-2xl overflow-hidden bg-[#ECECEC] aspect-[3/4] sm:h-[490px]">
+            <div className="relative rounded-2xl overflow-hidden bg-[#ECECEC] aspect-[3/4] sm:h-[460px]">
               
               {/* Muhammad Hadee Butt Portrait with Editorial Monochrome Treatment */}
               <img

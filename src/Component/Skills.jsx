@@ -310,13 +310,13 @@ function Skills() {
   }, [activeCategory, searchQuery]);
 
   return (
-    <section id="arsenal" className="w-full bg-[#F3F3F3] text-[#111111] px-6 md:px-12 lg:px-16 py-24 border-t border-black/[0.06] relative overflow-hidden bg-lines-pattern">
+    <section id="arsenal" className="w-full bg-[#F3F3F3] text-[#111111] px-6 md:px-12 lg:px-16 py-14 md:py-18 border-t border-black/[0.06] relative overflow-hidden bg-lines-pattern">
       <div className="w-full max-w-[1400px] mx-auto relative z-10">
         
         {/* Section Heading */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
+        <div className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
           <Reveal direction="down" delay={100}>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] mb-3.5 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] mb-3 shadow-xs">
               <span className="w-2 h-2 rounded-full bg-[#111111]" />
               <span className="text-[#111111] text-xs font-bold uppercase tracking-wider">Technical Arsenal</span>
             </div>
@@ -329,26 +329,26 @@ function Skills() {
           </Reveal>
 
           <Reveal direction="up" delay={300}>
-            <p className="text-zinc-600 text-sm sm:text-base mt-4 leading-relaxed font-normal">
+            <p className="text-zinc-600 text-sm sm:text-base mt-3 leading-relaxed font-normal">
               Structured breakdown of production frameworks, backend engines, databases, deployment toolchains, and emerging AI technologies.
             </p>
           </Reveal>
 
           {/* Interactive Controls Bar: Filter Pills + Search Input */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="mt-6 sm:mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
             
             {/* Category Filter Tabs */}
-            <div className="flex flex-wrap justify-center gap-2">
+            <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
               {categories.map((cat) => {
                 const isActive = activeCategory === cat.id;
                 return (
                   <button
                     key={cat.id}
                     onClick={() => setActiveCategory(cat.id)}
-                    className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                    className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                       isActive
-                        ? "bg-[#111111] text-white shadow-sm font-semibold"
-                        : "bg-white text-zinc-700 hover:text-black hover:bg-black/[0.04] border border-black/[0.08] shadow-sm"
+                        ? "bg-[#111111] text-white shadow-xs font-semibold"
+                        : "bg-white text-zinc-700 hover:text-black hover:bg-black/[0.04] border border-black/[0.08] shadow-xs"
                     }`}
                   >
                     {cat.label}
@@ -365,7 +365,7 @@ function Skills() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search skills..."
-                className="w-full bg-white border border-black/[0.08] rounded-full pl-9 pr-4 py-2 text-xs sm:text-sm text-[#111111] placeholder-zinc-400 focus:outline-none focus:border-black transition shadow-sm"
+                className="w-full bg-white border border-black/[0.08] rounded-full pl-9 pr-4 py-1.5 sm:py-2 text-xs sm:text-sm text-[#111111] placeholder-zinc-400 focus:outline-none focus:border-black transition shadow-xs"
               />
               {searchQuery && (
                 <button
@@ -381,7 +381,7 @@ function Skills() {
 
         {/* Categories Grid */}
         {filteredCategories.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-3xl border border-black/[0.08] shadow-sm">
+          <div className="text-center py-14 bg-white rounded-3xl border border-black/[0.08] shadow-sm">
             <p className="text-zinc-800 font-semibold mb-2">No matching technologies found</p>
             <p className="text-zinc-500 text-xs">Try adjusting your search query or switching categories.</p>
             <button
@@ -395,14 +395,14 @@ function Skills() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-14">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8 md:mb-10">
             {filteredCategories.map((category, catIndex) => (
               <Reveal key={category.id} direction="up" delay={100 * (catIndex % 2 + 1)}>
-                <div className="h-full bg-white rounded-3xl p-6 sm:p-8 border border-black/[0.08] hover:border-black/30 transition-all duration-300 shadow-sm flex flex-col justify-between">
+                <div className="h-full bg-white rounded-3xl p-5 sm:p-7 border border-black/[0.08] hover:border-black/30 transition-all duration-300 shadow-sm flex flex-col justify-between">
                   
                   <div>
                     {/* Category Header */}
-                    <div className="flex items-center justify-between pb-4 mb-6 border-b border-black/[0.06]">
+                    <div className="flex items-center justify-between pb-3.5 mb-5 border-b border-black/[0.06]">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs">
                           {category.id === "frontend" && <Code2 className="w-5 h-5" />}
@@ -413,7 +413,7 @@ function Skills() {
                           {category.id === "ai_ml" && <Brain className="w-5 h-5" />}
                         </div>
                         <div>
-                          <h3 className="font-display text-[#111111] text-xl font-bold">
+                          <h3 className="font-display text-[#111111] text-lg sm:text-xl font-bold">
                             {category.title}
                           </h3>
                           <span className="text-xs text-zinc-500 font-medium">
@@ -427,12 +427,12 @@ function Skills() {
                       </span>
                     </div>
 
-                    <p className="text-zinc-600 text-xs sm:text-sm mb-6 font-normal">
+                    <p className="text-zinc-600 text-xs sm:text-sm mb-5 font-normal">
                       {category.description}
                     </p>
 
                     {/* Skill Items List */}
-                    <div className="space-y-4">
+                    <div className="space-y-3.5">
                       {category.skills.map((skill) => (
                         <div key={skill.name} className="space-y-1.5">
                           <div className="flex items-center justify-between text-xs">
@@ -465,24 +465,24 @@ function Skills() {
 
         {/* Daily Developer Toolchain Strip */}
         <Reveal direction="up" delay={300}>
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-black/[0.08] shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 border-b border-black/[0.06] gap-2">
+          <div className="bg-white rounded-3xl p-5 sm:p-7 border border-black/[0.08] shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 mb-5 border-b border-black/[0.06] gap-2">
               <div>
-                <span className="text-zinc-500 text-xs font-bold uppercase tracking-wider block mb-0.5">
+                <span className="text-zinc-500 text-[11px] font-bold uppercase tracking-wider block mb-0.5">
                   Production Workflows
                 </span>
-                <h4 className="font-display text-[#111111] text-lg sm:text-xl font-bold">
+                <h4 className="font-display text-[#111111] text-base sm:text-lg font-bold">
                   Daily Engineering Toolchain & Environments
                 </h4>
               </div>
               <span className="text-xs text-zinc-500 font-medium">Standard Agile & Git Flow</span>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5 sm:gap-3">
               {dailyToolchain.map((tool) => (
                 <div
                   key={tool.name}
-                  className="p-3 rounded-xl bg-[#F8F8F9] border border-black/[0.06] text-center hover:border-black/20 hover:bg-white hover:-translate-y-1 transition-all duration-200"
+                  className="p-2.5 sm:p-3 rounded-xl bg-[#F8F8F9] border border-black/[0.06] text-center hover:border-black/20 hover:bg-white hover:-translate-y-0.5 transition-all duration-200"
                 >
                   <p className="text-[#111111] text-xs font-bold truncate">{tool.name}</p>
                   <p className="text-zinc-500 text-[10px] mt-0.5 truncate">{tool.category}</p>

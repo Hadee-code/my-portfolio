@@ -20,8 +20,8 @@ function Navbar() {
         setScrollProgress(progress);
       }
 
-      // Exact 7 sections in order + footer
-      const sections = ["home", "profile", "career", "showcase", "arsenal", "ai-lab", "education", "footer"];
+      // Exact 6 sections in order + footer
+      const sections = ["home", "profile", "career", "showcase", "arsenal", "education", "footer"];
       const scrollPosition = window.scrollY + 140;
 
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -47,7 +47,6 @@ function Navbar() {
     { name: "Career", href: "#career", id: "career" },
     { name: "Showcase", href: "#showcase", id: "showcase" },
     { name: "Arsenal", href: "#arsenal", id: "arsenal" },
-    { name: "AI Lab", href: "#ai-lab", id: "ai-lab" },
     { name: "Education", href: "#education", id: "education" },
   ];
 
@@ -69,13 +68,13 @@ function Navbar() {
         style={{ width: `${scrollProgress}%` }}
       />
 
-      <div className="w-full max-w-[1400px] mx-auto h-[76px] flex items-center justify-between px-6 md:px-12 lg:px-16">
+      <div className="w-full max-w-[1400px] mx-auto h-[68px] sm:h-[74px] flex items-center justify-between px-6 md:px-12 lg:px-16">
         
         {/* Brand Monogram & Minimalist Geometric Icon */}
         <div className="flex items-center gap-3">
           <a href="#home" className="flex items-center gap-3 group">
             {/* Minimal Geometric Emblem Mark matching reference */}
-            <div className="w-9 h-9 rounded-xl bg-[#111111] text-white flex items-center justify-center transition-transform group-hover:scale-105 duration-200 shadow-sm">
+            <div className="w-9 h-9 rounded-xl bg-[#111111] text-white flex items-center justify-center transition-transform group-hover:scale-105 duration-200 shadow-xs">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -109,9 +108,9 @@ function Navbar() {
               <a
                 key={link.id}
                 href={link.href}
-                className={`text-[13px] font-medium px-4 py-1.5 rounded-full transition-all duration-200 relative ${
+                className={`text-[13px] font-medium px-3.5 py-1.5 rounded-full transition-all duration-200 relative ${
                   isActive
-                    ? "text-white bg-[#111111] shadow-sm font-semibold"
+                    ? "text-white bg-[#111111] shadow-xs font-semibold"
                     : "text-zinc-600 hover:text-[#111111] hover:bg-black/[0.04]"
                 }`}
               >
@@ -122,32 +121,23 @@ function Navbar() {
         </nav>
 
         {/* Action Buttons & Mobile Menu Trigger */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           
           {/* Quick CV Download (Desktop) */}
           <a
             href={profileData.cvFile}
             download="Muhammad_Hadee_Butt_CV.pdf"
             onClick={handleDownloadCV}
-            className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium text-zinc-700 bg-white border border-black/[0.1] hover:border-black/30 hover:text-black transition-all duration-200 shadow-sm"
+            className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-zinc-700 bg-white border border-black/[0.1] hover:border-black/30 hover:text-black transition-all duration-200 shadow-xs"
           >
             <Download className="w-3.5 h-3.5 text-zinc-600" />
             <span>CV</span>
           </a>
 
-          {/* Book A Call / Contact CTA Button pointing to #footer */}
-          <a
-            href="#footer"
-            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full text-[#111111] hover:text-black hover:bg-black/[0.05] transition-all duration-200 group border border-transparent hover:border-black/10"
-          >
-            <span>Book A Call</span>
-            <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-          </a>
-
           {/* Primary Filled CTA Button pointing to #footer */}
           <a
             href="#footer"
-            className="hidden sm:inline-flex items-center gap-1.5 bg-[#111111] text-white font-semibold px-5 py-2 rounded-full text-xs hover:bg-neutral-800 active:scale-95 transition-all duration-200 shadow-sm group"
+            className="hidden sm:inline-flex items-center gap-1.5 bg-[#111111] text-white font-semibold px-4.5 py-1.5 rounded-full text-xs hover:bg-neutral-800 active:scale-95 transition-all duration-200 shadow-xs group"
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-300" />
             <span>Hire Me</span>
@@ -157,7 +147,7 @@ function Navbar() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-full bg-white border border-black/[0.1] text-zinc-800 hover:text-black hover:border-black/30 transition cursor-pointer shadow-sm"
+            className="lg:hidden p-2 rounded-full bg-white border border-black/[0.1] text-zinc-800 hover:text-black hover:border-black/30 transition cursor-pointer shadow-xs"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? (

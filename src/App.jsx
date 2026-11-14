@@ -5,7 +5,6 @@ import About from "./Component/About";
 import CareerTrajectory from "./Component/CareerTrajectory";
 import Portfolio from "./Component/Portfolio";
 import Skills from "./Component/Skills";
-import AIEngineeringLab from "./Component/AIEngineeringLab";
 import EducationCertifications from "./Component/EducationCertifications";
 import Footer from "./Component/Footer";
 import CinematicSection from "./Component/CinematicSection";
@@ -69,25 +68,14 @@ function App() {
             enableEnter={true}
             enterDirection="bottom-to-top"
             enableExit={true}
-            exitDirection="top-to-bottom"
+            exitDirection="left-to-right"
           >
             <Skills />
           </CinematicSection>
 
-          {/* Section 06: AI & Engineering Lab */}
+          {/* Section 06: Education & Certifications */}
           <CinematicSection
             zIndex={60}
-            enableEnter={true}
-            enterDirection="top-to-bottom"
-            enableExit={true}
-            exitDirection="left-to-right"
-          >
-            <AIEngineeringLab />
-          </CinematicSection>
-
-          {/* Section 07: Education & Certifications */}
-          <CinematicSection
-            zIndex={70}
             enableEnter={true}
             enterDirection="left-to-right"
             enableExit={true}
@@ -98,8 +86,8 @@ function App() {
 
         </main>
 
-        {/* Section 08: Consolidated Footer (with integrated Contact & Inquiries) */}
-        <div className="relative z-[80]">
+        {/* Section 07: Consolidated Footer (with integrated Contact & Inquiries) */}
+        <div className="relative z-[70]">
           <Footer />
         </div>
       </div>
