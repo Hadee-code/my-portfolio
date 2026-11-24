@@ -241,7 +241,7 @@ export function CareerTrajectory() {
               </div>
               <div>
                 <h3 className="font-display text-[#111111] text-xl sm:text-2xl font-bold">Career Milestones</h3>
-                <p className="text-zinc-500 text-[11px] uppercase tracking-wider font-semibold">Evolutionary Trajectory</p>
+                <p className="text-zinc-500 text-[11px] uppercase tracking-wider font-semibold">Career Timeline</p>
               </div>
             </div>
 
@@ -253,7 +253,7 @@ export function CareerTrajectory() {
               {/* Timeline Animated Fill Line */}
               <div
                 ref={timelineProgressRef}
-                className="absolute left-0 top-2 bottom-2 w-[2px] bg-[#111111] shadow-[0_0_8px_rgba(0,0,0,0.3)] will-change-transform"
+                className="absolute left-0 top-2 bottom-2 w-[2px] bg-[#111111] will-change-transform"
                 style={{ transformOrigin: "top center" }}
               />
 
@@ -262,30 +262,28 @@ export function CareerTrajectory() {
                   {/* Node Dot */}
                   <div className="absolute -left-[30px] top-4 w-3.5 h-3.5 rounded-full bg-white border-2 border-[#111111] group-hover:bg-[#111111] group-hover:scale-125 transition-all shadow-xs z-10" />
 
-                  <InteractiveTilt maxTilt={4} scale={1.01}>
-                    <div className="bg-white rounded-2xl p-4 sm:p-5 border border-black/[0.08] shadow-sm hover:border-black/30 hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] transition-all">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[11px] font-mono-code font-bold text-zinc-500">
-                          {milestone.period}
-                        </span>
-                        <span className="text-[10px] font-semibold uppercase px-2.5 py-0.5 rounded-full bg-[#F3F3F3] text-zinc-700 border border-black/[0.06]">
-                          {milestone.badge}
-                        </span>
-                      </div>
-
-                      <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
-                        {milestone.phase}
-                      </p>
-
-                      <h4 className="font-display text-[#111111] font-bold text-sm sm:text-base mb-1.5">
-                        {milestone.title}
-                      </h4>
-
-                      <p className="text-zinc-600 text-xs leading-relaxed font-normal">
-                        {milestone.detail}
-                      </p>
+                  <div className="bg-white rounded-2xl p-4 sm:p-5 border border-black/[0.08] shadow-xs hover:border-black/30 hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-200">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[11px] font-mono-code font-bold text-zinc-500">
+                        {milestone.period}
+                      </span>
+                      <span className="text-[10px] font-semibold uppercase px-2.5 py-0.5 rounded-full bg-[#F3F3F3] text-zinc-700 border border-black/[0.06]">
+                        {milestone.badge}
+                      </span>
                     </div>
-                  </InteractiveTilt>
+
+                    <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                      {milestone.phase}
+                    </p>
+
+                    <h4 className="font-display text-[#111111] font-bold text-sm sm:text-base mb-1.5">
+                      {milestone.title}
+                    </h4>
+
+                    <p className="text-zinc-600 text-xs leading-relaxed font-normal">
+                      {milestone.detail}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>

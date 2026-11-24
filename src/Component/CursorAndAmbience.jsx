@@ -1,13 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export function CursorAndAmbience() {
   const cursorDotRef = useRef(null);
   const cursorRingRef = useRef(null);
-  const [activeSectionHue, setActiveSectionHue] = useState("hero");
   const [isTouch] = useState(() => 
     typeof window !== "undefined" && 
     (window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window)
@@ -89,61 +85,17 @@ export function CursorAndAmbience() {
     document.addEventListener("mouseover", handleMouseOver, { passive: true });
     document.addEventListener("mouseout", handleMouseOut, { passive: true });
 
-    // ScrollTrigger to detect active section and subtly alter ambient background atmosphere
-    const sections = [
-      { id: "home", hue: "hero" },
-      { id: "profile", hue: "profile" },
-      { id: "career", hue: "career" },
-      { id: "showcase", hue: "showcase" },
-      { id: "arsenal", hue: "arsenal" },
-      { id: "education", hue: "education" },
-      { id: "footer", hue: "footer" },
-    ];
-
-    const triggers = [];
-
-    sections.forEach(({ id, hue }) => {
-      const el = document.getElementById(id);
-      if (el) {
-        const st = ScrollTrigger.create({
-          trigger: el,
-          start: "top 60%",
-          end: "bottom 40%",
-          onEnter: () => setActiveSectionHue(hue),
-          onEnterBack: () => setActiveSectionHue(hue),
-        });
-        triggers.push(st);
-      }
-    });
-
     return () => {
       gsap.ticker.remove(updateRing);
       window.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseover", handleMouseOver);
       document.removeEventListener("mouseout", handleMouseOut);
-      triggers.forEach((st) => st.kill());
     };
   }, [isTouch]);
 
-  // Ambient aura styling based on active section
+  // Subtle monochrome ambient aura
   const getAmbienceStyle = () => {
-    switch (activeSectionHue) {
-      case "profile":
-        return "from-blue-500/[0.03] via-indigo-500/[0.02] to-transparent";
-      case "career":
-        return "from-emerald-500/[0.03] via-teal-500/[0.02] to-transparent";
-      case "showcase":
-        return "from-violet-500/[0.035] via-blue-500/[0.02] to-transparent";
-      case "arsenal":
-        return "from-amber-500/[0.025] via-orange-500/[0.015] to-transparent";
-      case "education":
-        return "from-cyan-500/[0.025] via-sky-500/[0.015] to-transparent";
-      case "footer":
-        return "from-neutral-900/[0.05] via-neutral-900/[0.03] to-transparent";
-      case "hero":
-      default:
-        return "from-black/[0.02] via-neutral-400/[0.015] to-transparent";
-    }
+    return "from-black/[0.02] via-neutral-400/[0.012] to-transparent";
   };
 
   return (

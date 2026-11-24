@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { 
-  ExternalLink, 
   Star, 
   Lock, 
   CheckCircle2, 
@@ -15,7 +14,6 @@ import {
   ShoppingCart, 
   Check 
 } from "lucide-react";
-import { GithubIcon } from "./SocialIcons";
 import profileData from "../data/profileData";
 import { useToast } from "./ToastContext";
 import InteractiveTilt from "./InteractiveTilt";
@@ -530,7 +528,7 @@ export function Portfolio() {
                       </div>
 
                       {/* Tech Stack Chips */}
-                      <div className="mt-3.5 pt-3.5 border-t border-black/[0.06]">
+                      <div className="mt-4 pt-4 border-t border-black/[0.06]">
                         <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-wider mb-2">Technologies Used</p>
                         <div className="flex flex-wrap gap-1.5">
                           {project.technologies.map((tech) => (
@@ -544,29 +542,6 @@ export function Portfolio() {
                         </div>
                       </div>
 
-                    </div>
-
-                    {/* Card Footer: Dual Actions */}
-                    <div className="px-5 sm:px-7 py-3.5 border-t border-black/[0.06] bg-[#FAFAFA] flex items-center justify-between gap-4">
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-zinc-800 hover:text-black transition-colors"
-                      >
-                        <GithubIcon className="w-4 h-4 text-zinc-700" />
-                        <span>Explore Repository</span>
-                      </a>
-
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-3.5 py-1.5 rounded-full bg-[#111111] text-white hover:bg-neutral-800 transition-all text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95"
-                      >
-                        <span>View Code</span>
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
                     </div>
 
                   </div>

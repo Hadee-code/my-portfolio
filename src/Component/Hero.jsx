@@ -295,7 +295,7 @@ export function Hero() {
             <div className="h-7 flex items-center mb-3">
               <span className="font-mono-code text-xs sm:text-sm text-zinc-500 mr-2">// Focus:</span>
               <span
-                className={`font-semibold text-sm sm:text-base text-blue-600 transition-all duration-300 transform ${
+                className={`font-bold text-sm sm:text-base text-[#111111] transition-all duration-300 transform ${
                   fadeRole ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1.5"
                 }`}
               >
@@ -425,8 +425,8 @@ export function Hero() {
             className="absolute -top-2.5 right-1 sm:-top-3 sm:right-0 z-20 bg-white/95 backdrop-blur-md border border-black/[0.08] px-3.5 py-1.5 rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.06)] flex items-center gap-2 animate-float-slow"
           >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-zinc-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#111111]" />
             </span>
             <div className="flex flex-col">
               <span className="text-[#111111] text-[11px] font-bold leading-tight">Full Stack & AI</span>

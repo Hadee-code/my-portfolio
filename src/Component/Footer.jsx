@@ -3,7 +3,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { 
   ArrowUp, 
-  Sparkles, 
   Download, 
   Mail, 
   Phone, 
@@ -13,8 +12,6 @@ import {
   CheckCircle2, 
   Copy, 
   Check, 
-  User, 
-  Tag, 
   ArrowRight,
   ArrowUpRight,
   FileText
@@ -23,7 +20,6 @@ import { LinkedinIcon, GithubIcon } from "./SocialIcons";
 import profileData from "../data/profileData";
 import { useToast } from "./ToastContext";
 import { useSmoothScroll } from "./SmoothScrollContext";
-import InteractiveTilt from "./InteractiveTilt";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -43,6 +39,7 @@ export function Footer() {
   const headerRef = useRef(null);
   const leftColRef = useRef(null);
   const rightColRef = useRef(null);
+  const footerNavRef = useRef(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -78,22 +75,23 @@ export function Footer() {
     return () => clearInterval(timer);
   }, []);
 
-  // GSAP ScrollTrigger Animations
+  // Subtle GSAP ScrollTrigger Animations
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion || !sectionRef.current) return;
 
     const ctx = gsap.context(() => {
+      // Header subtle fade-in & slide-up
       if (headerRef.current) {
         gsap.fromTo(
           headerRef.current.children,
-          { opacity: 0, y: 30 },
+          { opacity: 0, y: 20 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: "power3.out",
+            duration: 0.7,
+            stagger: 0.08,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: headerRef.current,
               start: "top 85%",
@@ -103,38 +101,59 @@ export function Footer() {
         );
       }
 
+      // Left column cards staggered reveal
       if (leftColRef.current) {
+        const cards = leftColRef.current.querySelectorAll(".contact-card-item");
         gsap.fromTo(
-          leftColRef.current,
-          { opacity: 0, x: -35, scale: 0.98 },
+          cards,
+          { opacity: 0, y: 20 },
           {
             opacity: 1,
-            x: 0,
-            scale: 1,
-            duration: 0.85,
-            ease: "power3.out",
+            y: 0,
+            duration: 0.6,
+            stagger: 0.07,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: leftColRef.current,
-              start: "top 82%",
+              start: "top 85%",
               toggleActions: "play none none reverse",
             },
           }
         );
       }
 
+      // Right column form subtle entrance
       if (rightColRef.current) {
         gsap.fromTo(
           rightColRef.current,
-          { opacity: 0, x: 35, scale: 0.98 },
+          { opacity: 0, y: 20 },
           {
             opacity: 1,
-            x: 0,
-            scale: 1,
-            duration: 0.85,
-            ease: "power3.out",
+            y: 0,
+            duration: 0.7,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: rightColRef.current,
-              start: "top 82%",
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+
+      // Footer bottom directory subtle reveal
+      if (footerNavRef.current) {
+        gsap.fromTo(
+          footerNavRef.current,
+          { opacity: 0, y: 16 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: footerNavRef.current,
+              start: "top 90%",
               toggleActions: "play none none reverse",
             },
           }
@@ -199,6 +218,16 @@ export function Footer() {
     addToast("Downloading Muhammad Hadee Butt's CV...", "info", 2500);
   };
 
+  const handleNavClick = (e, href) => {
+    e.preventDefault();
+    if (smoothScroll && smoothScroll.scrollTo) {
+      smoothScroll.scrollTo(href);
+    } else {
+      const el = document.querySelector(href);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const navLinks = [
     { name: "Home", href: "#home" },
     { name: "Engineering Profile", href: "#profile" },
@@ -211,15 +240,15 @@ export function Footer() {
   const getSocialIcon = (sName) => {
     switch (sName) {
       case "linkedin":
-        return <LinkedinIcon className="w-3.5 h-3.5" />;
+        return <LinkedinIcon className="w-4 h-4" />;
       case "github":
-        return <GithubIcon className="w-3.5 h-3.5" />;
+        return <GithubIcon className="w-4 h-4" />;
       case "email":
-        return <Mail className="w-3.5 h-3.5" />;
+        return <Mail className="w-4 h-4" />;
       case "phone":
-        return <Phone className="w-3.5 h-3.5" />;
+        return <Phone className="w-4 h-4" />;
       default:
-        return <ArrowRight className="w-3.5 h-3.5" />;
+        return <ArrowRight className="w-4 h-4" />;
     }
   };
 
@@ -227,172 +256,167 @@ export function Footer() {
     <footer 
       ref={sectionRef}
       id="footer" 
-      className="w-full bg-[#EAEAEA] text-[#111111] relative border-t border-black/[0.08] overflow-hidden"
+      className="w-full bg-[#F3F3F3] text-[#111111] relative border-t border-black/[0.08]"
     >
-      {/* Top Hairline Seam */}
-      <div className="w-full h-[1px] bg-black/[0.08]" />
+      {/* Anchor target for #contact */}
+      <div id="contact" className="absolute -top-16 left-0 pointer-events-none" />
 
-      <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 pt-14 md:pt-16 pb-10 md:pb-12">
+      <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 pt-16 md:pt-20 pb-12 md:pb-16">
         
-        {/* Section Heading */}
-        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-10 md:mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] mb-3 shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-[#111111]" />
-            <span className="text-[#111111] text-xs font-bold uppercase tracking-wider font-mono-code">
-              Contact & Opportunities
+        {/* ============================================================== */}
+        {/* 1. CONTACT SECTION HEADING (Clean, Minimal, Swiss Typography) */}
+        {/* ============================================================== */}
+        <div ref={headerRef} className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-black/[0.08] mb-3.5 shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#111111]" />
+            <span className="text-[#111111] text-xs font-semibold uppercase tracking-wider font-mono-code">
+              Contact & Inquiries
             </span>
           </div>
           
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#111111]">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#111111] leading-tight">
             Let's Discuss Professional <span className="font-light italic text-zinc-500">Opportunities</span>
           </h2>
 
-          <p className="text-zinc-600 text-sm sm:text-base mt-3 leading-relaxed font-normal max-w-2xl mx-auto">
-            Open for full-time engineering roles, technical contracts, and architecture discussions. Let's start a conversation.
+          <p className="text-zinc-600 text-sm sm:text-base mt-3.5 leading-relaxed font-normal max-w-xl mx-auto">
+            Open for full-time software engineering roles, high-impact contracts, and architecture discussions. Let's start a conversation.
           </p>
         </div>
 
-        {/* 2-Column Consolidated Contact Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-stretch">
+        {/* ============================================================== */}
+        {/* 2. TWO-COLUMN BALANCED CONTACT & FORM GRID                    */}
+        {/* ============================================================== */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start lg:items-stretch">
           
-          {/* Left Column: Direct Channels & Status */}
-          <div ref={leftColRef} className="lg:col-span-5 flex flex-col justify-between space-y-3.5">
+          {/* ------------------------------------------------------------ */}
+          {/* LEFT COLUMN: Contact Information Cards (Equal Height Grid)  */}
+          {/* ------------------------------------------------------------ */}
+          <div ref={leftColRef} className="lg:col-span-5 flex flex-col justify-between h-full gap-3 lg:gap-0">
             
-            {/* Status Card */}
-            <InteractiveTilt maxTilt={3} scale={1.008}>
-              <div className="bg-white border border-black/[0.08] rounded-2xl p-5 shadow-xs relative overflow-hidden">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2.5">
-                    <span className="relative flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-                    </span>
-                    <span className="text-[#111111] font-bold text-sm">Available for Impact</span>
-                  </div>
-                  <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono-code">
-                    FAST RESPONSE
+            {/* Card 1: Availability Status */}
+            <div className="contact-card-item bg-white border border-black/[0.08] hover:border-black/30 rounded-2xl p-4 sm:p-4.5 transition-all duration-200 shadow-xs flex items-center justify-between">
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-[#111111] text-white flex items-center justify-center shrink-0">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
                   </span>
                 </div>
-                <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed font-normal">
-                  Currently taking inquiries for full-stack engineering roles (MERN, Next.js, PostgreSQL) and software contracts.
-                </p>
-              </div>
-            </InteractiveTilt>
-
-            {/* Email Card with One-Click Copy */}
-            <InteractiveTilt maxTilt={3} scale={1.008}>
-              <div className="group bg-white border border-black/[0.08] hover:border-black/30 rounded-2xl p-4 sm:p-5 transition-all duration-300 shadow-xs hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] flex items-center justify-between">
-                <div className="flex items-center gap-3.5 overflow-hidden">
-                  <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs shrink-0 group-hover:scale-105 transition-transform">
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <div className="overflow-hidden">
-                    <p className="text-zinc-500 text-[10px] uppercase tracking-wider font-bold font-mono-code">Email Address</p>
-                    <a
-                      href={`mailto:${email}`}
-                      className="text-[#111111] font-bold text-xs sm:text-sm hover:text-black transition-colors truncate block"
-                    >
-                      {email}
-                    </a>
-                  </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-zinc-500">Availability Status</p>
+                  <p className="text-[#111111] font-semibold text-xs sm:text-sm truncate mt-0.5">Available for Full-Time Roles</p>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={handleCopyEmail}
-                  className="p-2 rounded-full bg-[#F8F8F9] border border-black/[0.08] text-zinc-700 hover:text-black hover:border-black/30 transition shrink-0 cursor-pointer active:scale-95 shadow-xs"
-                  title="Copy email to clipboard"
-                >
-                  {copiedEmail ? (
-                    <Check className="w-4 h-4 text-emerald-600" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                </button>
               </div>
-            </InteractiveTilt>
+              <span className="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-[10px] sm:text-[11px] font-mono-code font-bold shrink-0 ml-2">
+                ACTIVE
+              </span>
+            </div>
 
-            {/* Phone Card with One-Click Copy */}
-            <InteractiveTilt maxTilt={3} scale={1.008}>
-              <div className="group bg-white border border-black/[0.08] hover:border-black/30 rounded-2xl p-4 sm:p-5 transition-all duration-300 shadow-xs hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] flex items-center justify-between">
-                <div className="flex items-center gap-3.5 overflow-hidden">
-                  <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs shrink-0 group-hover:scale-105 transition-transform">
-                    <Phone className="w-4 h-4" />
-                  </div>
-                  <div className="overflow-hidden">
-                    <p className="text-zinc-500 text-[10px] uppercase tracking-wider font-bold font-mono-code">Phone / WhatsApp</p>
-                    <a
-                      href={`tel:${phone}`}
-                      className="text-[#111111] font-bold text-xs sm:text-sm hover:text-black transition-colors truncate block"
-                    >
-                      {phone}
-                    </a>
-                  </div>
+            {/* Card 2: Email Address */}
+            <div className="contact-card-item bg-white border border-black/[0.08] hover:border-black/30 rounded-2xl p-4 sm:p-4.5 transition-all duration-200 shadow-xs flex items-center justify-between">
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-[#111111] text-white flex items-center justify-center shrink-0">
+                  <Mail className="w-4 h-4" />
                 </div>
-
-                <button
-                  type="button"
-                  onClick={handleCopyPhone}
-                  className="p-2 rounded-full bg-[#F8F8F9] border border-black/[0.08] text-zinc-700 hover:text-black hover:border-black/30 transition shrink-0 cursor-pointer active:scale-95 shadow-xs"
-                  title="Copy phone to clipboard"
-                >
-                  {copiedPhone ? (
-                    <Check className="w-4 h-4 text-emerald-600" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                </button>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-zinc-500">Email Address</p>
+                  <a
+                    href={`mailto:${email}`}
+                    className="text-[#111111] font-semibold text-xs sm:text-sm hover:text-zinc-600 transition-colors truncate block mt-0.5"
+                  >
+                    {email}
+                  </a>
+                </div>
               </div>
-            </InteractiveTilt>
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                className="p-2 rounded-xl bg-[#F8F8F9] border border-black/[0.08] text-zinc-600 hover:text-black hover:border-black/30 hover:bg-white transition-all shrink-0 cursor-pointer active:scale-95 shadow-xs ml-2"
+                title="Copy email address"
+              >
+                {copiedEmail ? (
+                  <Check className="w-4 h-4 text-emerald-600" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
+              </button>
+            </div>
 
-            {/* Location & Live Ticking Clock Card */}
-            <InteractiveTilt maxTilt={3} scale={1.008}>
-              <div className="bg-white border border-black/[0.08] rounded-2xl p-4 sm:p-5 shadow-xs flex items-center justify-between">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-[#111111] flex items-center justify-center text-white shadow-xs shrink-0">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-zinc-500 text-[10px] uppercase tracking-wider font-bold font-mono-code">Location</p>
-                    <p className="text-[#111111] font-bold text-xs sm:text-sm">
-                      {location}
-                    </p>
-                  </div>
+            {/* Card 3: Phone / WhatsApp */}
+            <div className="contact-card-item bg-white border border-black/[0.08] hover:border-black/30 rounded-2xl p-4 sm:p-4.5 transition-all duration-200 shadow-xs flex items-center justify-between">
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-[#111111] text-white flex items-center justify-center shrink-0">
+                  <Phone className="w-4 h-4" />
                 </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-zinc-500">Phone / WhatsApp</p>
+                  <a
+                    href={`tel:${phone}`}
+                    className="text-[#111111] font-semibold text-xs sm:text-sm hover:text-zinc-600 transition-colors truncate block mt-0.5"
+                  >
+                    {phone}
+                  </a>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleCopyPhone}
+                className="p-2 rounded-xl bg-[#F8F8F9] border border-black/[0.08] text-zinc-600 hover:text-black hover:border-black/30 hover:bg-white transition-all shrink-0 cursor-pointer active:scale-95 shadow-xs ml-2"
+                title="Copy phone number"
+              >
+                {copiedPhone ? (
+                  <Check className="w-4 h-4 text-emerald-600" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
+              </button>
+            </div>
 
-                <div className="text-right">
-                  <div className="flex items-center gap-1.5 text-xs text-zinc-600 font-bold justify-end font-mono-code">
-                    <Clock className="w-3.5 h-3.5 text-zinc-500" />
-                    <span>PKT (UTC+5)</span>
-                  </div>
-                  <p className="text-xs text-zinc-800 font-mono-code mt-0.5 font-bold">
-                    {localTime || "12:00 PM"}
+            {/* Card 4: Location & Live Ticking Clock */}
+            <div className="contact-card-item bg-white border border-black/[0.08] hover:border-black/30 rounded-2xl p-4 sm:p-4.5 transition-all duration-200 shadow-xs flex items-center justify-between">
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-[#111111] text-white flex items-center justify-center shrink-0">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-zinc-500">Location</p>
+                  <p className="text-[#111111] font-semibold text-xs sm:text-sm truncate mt-0.5">
+                    {location}
                   </p>
                 </div>
               </div>
-            </InteractiveTilt>
+              <div className="text-right shrink-0 ml-2">
+                <div className="flex items-center gap-1 text-[10px] font-mono-code text-zinc-500 font-bold uppercase justify-end">
+                  <Clock className="w-3 h-3 text-zinc-400" />
+                  <span>PKT</span>
+                </div>
+                <p className="text-xs font-mono-code font-bold text-[#111111] mt-0.5">
+                  {localTime || "12:00 PM"}
+                </p>
+              </div>
+            </div>
 
-            {/* Quick Actions Strip */}
-            <div className="pt-1 flex flex-col sm:flex-row items-center gap-2.5">
+            {/* Card 5: CV Download & Social Links */}
+            <div className="contact-card-item bg-white border border-black/[0.08] hover:border-black/30 rounded-2xl p-3.5 sm:p-4 transition-all duration-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
               <a
                 href={cvFile}
                 download="Muhammad_Hadee_Butt_CV.pdf"
                 onClick={handleDownloadCV}
-                className="w-full sm:w-auto flex-1 bg-[#111111] text-white font-semibold px-5 py-3 rounded-2xl text-xs sm:text-sm hover:bg-neutral-800 active:scale-95 transition-all shadow-xs flex items-center justify-center gap-2 group"
+                className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#111111] text-white text-xs font-semibold hover:bg-neutral-800 active:scale-95 transition-all shadow-xs group"
               >
-                <Download className="w-4 h-4 text-zinc-300 group-hover:-translate-y-0.5 transition-transform" />
-                <span>Download Résumé (PDF)</span>
+                <Download className="w-3.5 h-3.5 text-zinc-300 group-hover:-translate-y-0.5 transition-transform" />
+                <span>Download CV (PDF)</span>
               </a>
 
-              <div className="flex items-center gap-2 w-full sm:w-auto justify-center">
+              <div className="flex items-center gap-1.5 w-full sm:w-auto justify-center sm:justify-end">
                 {socials.map((s) => (
                   <a
                     key={s.name}
                     href={s.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 rounded-2xl bg-white border border-black/[0.08] hover:border-black/30 text-zinc-700 hover:text-black transition-all shadow-xs hover:-translate-y-0.5 active:scale-95"
-                    title={s.label}
+                    className="w-9 h-9 rounded-xl bg-[#F8F8F9] border border-black/[0.08] hover:border-black/30 hover:bg-white text-zinc-700 hover:text-black flex items-center justify-center transition-all shadow-xs active:scale-95"
+                    title={s.label || s.name}
                   >
                     {getSocialIcon(s.name)}
                   </a>
@@ -402,180 +426,174 @@ export function Footer() {
 
           </div>
 
-          {/* Right Column: Direct Message Form */}
-          <div ref={rightColRef} className="lg:col-span-7 flex flex-col justify-between">
-            <InteractiveTilt maxTilt={3} scale={1.008} className="h-full">
-              <div className="h-full bg-white border border-black/[0.08] rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <h3 className="font-display text-[#111111] text-xl sm:text-2xl font-bold">Send a Direct Message</h3>
-                    <Sparkles className="w-5 h-5 text-zinc-600" />
-                  </div>
-                  
-                  <p className="text-zinc-600 text-xs sm:text-sm mb-5 font-normal">
-                    Leave your project scope or recruitment details below and I will review and reply within 24 hours.
-                  </p>
-
-                  {isSubmitted ? (
-                    <div className="bg-[#F8F8F9] border border-black/[0.08] rounded-2xl p-6 text-center animate-fadeIn">
-                      <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center mx-auto mb-3">
-                        <CheckCircle2 className="w-6 h-6" />
-                      </div>
-                      <h4 className="font-display text-[#111111] font-bold text-lg mb-1">Message Dispatched!</h4>
-                      <p className="text-zinc-600 text-xs sm:text-sm mb-4 max-w-sm mx-auto">
-                        Thank you for reaching out. Your inquiry has been received and I will reply via email shortly.
-                      </p>
-                      <button
-                        onClick={() => setIsSubmitted(false)}
-                        className="px-4 py-2 rounded-full bg-[#111111] text-white text-xs font-bold hover:bg-neutral-800 transition cursor-pointer shadow-xs"
-                      >
-                        Send another message
-                      </button>
-                    </div>
-                  ) : (
-                    <form onSubmit={handleSubmit} className="space-y-3.5">
-                      
-                      {/* Inquiry Category Pills */}
-                      <div>
-                        <label className="block text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-2 font-mono-code">
-                          Inquiry Category
-                        </label>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2">
-                          {inquiryTypes.map((type) => (
-                            <button
-                              key={type}
-                              type="button"
-                              onClick={() => handleSelectType(type)}
-                              className={`py-1.5 px-2.5 rounded-xl text-xs font-semibold transition text-center cursor-pointer border ${
-                                formData.inquiryType === type
-                                  ? "bg-[#111111] text-white border-[#111111] shadow-xs"
-                                  : "bg-[#F8F8F9] text-zinc-700 border-black/[0.08] hover:border-black/30 hover:bg-white"
-                              }`}
-                            >
-                              {type}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Name & Email Row */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-1.5 font-mono-code">
-                            Your Name
-                          </label>
-                          <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
-                              <User className="w-3.5 h-3.5" />
-                            </div>
-                            <input
-                              type="text"
-                              name="name"
-                              required
-                              value={formData.name}
-                              onChange={handleChange}
-                              placeholder="e.g. Alex Henderson"
-                              className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition"
-                            />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-1.5 font-mono-code">
-                            Email Address
-                          </label>
-                          <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
-                              <Mail className="w-3.5 h-3.5" />
-                            </div>
-                            <input
-                              type="email"
-                              name="email"
-                              required
-                              value={formData.email}
-                              onChange={handleChange}
-                              placeholder="e.g. alex@company.com"
-                              className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Subject Input */}
-                      <div>
-                        <label className="block text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-1.5 font-mono-code">
-                          Subject
-                        </label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
-                            <Tag className="w-3.5 h-3.5" />
-                          </div>
-                          <input
-                            type="text"
-                            name="subject"
-                            required
-                            value={formData.subject}
-                            onChange={handleChange}
-                            placeholder="e.g. Full Stack Developer Opening"
-                            className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Message Textarea */}
-                      <div>
-                        <label className="block text-zinc-500 text-[11px] font-bold uppercase tracking-wider mb-1.5 font-mono-code">
-                          Message Details
-                        </label>
-                        <textarea
-                          name="message"
-                          rows={3}
-                          required
-                          value={formData.message}
-                          onChange={handleChange}
-                          placeholder="Share details about the role, project scope, requirements..."
-                          className="w-full p-3.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-black focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition resize-none"
-                        />
-                      </div>
-
-                      {/* Submit Button */}
-                      <button
-                        type="submit"
-                        disabled={submitting}
-                        className="w-full py-3 rounded-full bg-[#111111] hover:bg-neutral-800 text-white font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-[0.99] disabled:opacity-50 mt-1"
-                      >
-                        {submitting ? (
-                          <span className="flex items-center gap-2">
-                            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            <span>Transmitting...</span>
-                          </span>
-                        ) : (
-                          <>
-                            <span>Send Message</span>
-                            <Send className="w-3.5 h-3.5" />
-                          </>
-                        )}
-                      </button>
-
-                    </form>
-                  )}
-                </div>
+          {/* ------------------------------------------------------------ */}
+          {/* RIGHT COLUMN: Clean, Professionally Structured Contact Form  */}
+          {/* ------------------------------------------------------------ */}
+          <div ref={rightColRef} className="lg:col-span-7 flex flex-col h-full">
+            <div className="bg-white border border-black/[0.08] rounded-2xl p-5 sm:p-6 lg:p-7 shadow-xs flex flex-col justify-between h-full">
+              
+              <div>
+                <h3 className="font-display text-[#111111] text-lg sm:text-xl font-bold">
+                  Send a Message
+                </h3>
+                <p className="text-zinc-600 text-xs sm:text-sm mt-1 leading-relaxed">
+                  Fill out the brief details below and I will respond to your inquiry within 24 hours.
+                </p>
               </div>
-            </InteractiveTilt>
+
+              {isSubmitted ? (
+                <div className="bg-[#F8F8F9] border border-black/[0.08] rounded-xl p-8 text-center flex-1 flex flex-col items-center justify-center my-4">
+                  <div className="w-11 h-11 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center mx-auto mb-3">
+                    <CheckCircle2 className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-display text-[#111111] font-bold text-base mb-1">
+                    Message Dispatched Successfully
+                  </h4>
+                  <p className="text-zinc-600 text-xs sm:text-sm mb-4 max-w-sm mx-auto leading-relaxed">
+                    Thank you for reaching out. Your message has been received and I will reply via email shortly.
+                  </p>
+                  <button
+                    onClick={() => setIsSubmitted(false)}
+                    className="px-4 py-2 rounded-xl bg-[#111111] text-white text-xs font-semibold hover:bg-neutral-800 transition cursor-pointer shadow-xs active:scale-95"
+                  >
+                    Send another message
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between space-y-3 sm:space-y-3.5 mt-3 sm:mt-4">
+                  
+                  {/* Inquiry Category Selectors */}
+                  <div>
+                    <label className="block text-[10px] font-mono-code font-bold uppercase tracking-wider text-zinc-500 mb-1.5">
+                      Inquiry Category
+                    </label>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      {inquiryTypes.map((type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          onClick={() => handleSelectType(type)}
+                          className={`h-9 px-2.5 rounded-xl text-xs font-medium transition-all text-center cursor-pointer border ${
+                            formData.inquiryType === type
+                              ? "bg-[#111111] text-white border-[#111111] shadow-xs font-semibold"
+                              : "bg-[#F8F8F9] text-zinc-700 border-black/[0.08] hover:border-black/25 hover:text-black hover:bg-white"
+                          }`}
+                        >
+                          {type}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Name & Email Row */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+                    <div>
+                      <label className="block text-[10px] font-mono-code font-bold uppercase tracking-wider text-zinc-500 mb-1">
+                        Your Name
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        required
+                        value={formData.name}
+                        onChange={handleChange}
+                        placeholder="Alex Henderson"
+                        className="w-full h-10 sm:h-11 px-3.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-[#111111] focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition-colors"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-mono-code font-bold uppercase tracking-wider text-zinc-500 mb-1">
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        required
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="alex@company.com"
+                        className="w-full h-10 sm:h-11 px-3.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-[#111111] focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Subject Input */}
+                  <div>
+                    <label className="block text-[10px] font-mono-code font-bold uppercase tracking-wider text-zinc-500 mb-1">
+                      Subject
+                    </label>
+                    <input
+                      type="text"
+                      name="subject"
+                      required
+                      value={formData.subject}
+                      onChange={handleChange}
+                      placeholder="e.g. Full Stack Developer Opening / Architecture Consultation"
+                      className="w-full h-10 sm:h-11 px-3.5 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-[#111111] focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition-colors"
+                    />
+                  </div>
+
+                  {/* Message Textarea */}
+                  <div className="flex-1 flex flex-col min-h-[100px]">
+                    <label className="block text-[10px] font-mono-code font-bold uppercase tracking-wider text-zinc-500 mb-1">
+                      Message Details
+                    </label>
+                    <textarea
+                      name="message"
+                      rows={3}
+                      required
+                      value={formData.message}
+                      onChange={handleChange}
+                      placeholder="Share project scope, technical requirements, timeline, or relevant details..."
+                      className="w-full flex-1 min-h-[88px] p-3 rounded-xl bg-[#F8F8F9] border border-black/[0.08] focus:border-[#111111] focus:bg-white text-xs sm:text-sm text-[#111111] placeholder:text-zinc-400 outline-none transition-colors resize-none"
+                    />
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full h-10 sm:h-11 rounded-xl bg-[#111111] hover:bg-neutral-800 text-white font-semibold text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-[0.99] disabled:opacity-50"
+                  >
+                    {submitting ? (
+                      <span className="flex items-center gap-2">
+                        <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Transmitting Message...</span>
+                      </span>
+                    ) : (
+                      <>
+                        <span>Send Message</span>
+                        <Send className="w-3.5 h-3.5" />
+                      </>
+                    )}
+                  </button>
+
+                </form>
+              )}
+            </div>
           </div>
 
         </div>
 
-        {/* SECTION 2: SUBTLE HORIZONTAL SEPARATION LINE */}
-        <div className="w-full h-[1px] bg-black/[0.08] my-10 md:my-12" />
+        {/* ============================================================== */}
+        {/* 3. SUBTLE HORIZONTAL SEPARATION LINE                          */}
+        {/* ============================================================== */}
+        <div className="w-full h-[1px] bg-black/[0.08] my-12 sm:my-14" />
 
-        {/* SECTION 3: STRUCTURED 4-COLUMN FOOTER DIRECTORY */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+        {/* ============================================================== */}
+        {/* 4. STRUCTURED FOOTER DIRECTORY (Clean Swiss Grid)              */}
+        {/* ============================================================== */}
+        <div ref={footerNavRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           
           {/* Column 1: Brand & Philosophy */}
-          <div className="lg:col-span-5 space-y-3.5">
-            <a href="#home" className="inline-flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-xl bg-[#111111] text-white flex items-center justify-center transition-transform group-hover:scale-105 duration-200 shadow-xs">
+          <div className="lg:col-span-5 space-y-3">
+            <a 
+              href="#home" 
+              onClick={(e) => handleNavClick(e, "#home")}
+              className="inline-flex items-center gap-2.5 group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-[#111111] text-white flex items-center justify-center transition-transform group-hover:scale-105 duration-200 shadow-xs">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -583,14 +601,14 @@ export function Footer() {
                   strokeWidth="1.8"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="w-5 h-5"
+                  className="w-4 h-4"
                 >
                   <polygon points="12 2 4 9 7 19 12 16 17 19 20 9 12 2" />
                   <polyline points="9 11 12 13 15 11" />
                 </svg>
               </div>
               <div className="flex flex-col">
-                <span className="font-display text-xl font-extrabold text-[#111111] tracking-tight leading-tight">
+                <span className="font-display text-lg font-bold text-[#111111] tracking-tight leading-tight">
                   Hadee<span className="text-zinc-500">.</span>
                 </span>
                 <span className="text-[10px] text-zinc-500 font-mono-code font-medium uppercase tracking-wider">
@@ -603,14 +621,14 @@ export function Footer() {
               Junior Full-Stack & AI Engineer specializing in resilient MERN architectures, Next.js, and high-performance web systems.
             </p>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-[11px] font-medium">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-[11px] font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               <span>Open to work · Remote & On-site</span>
             </div>
           </div>
 
           {/* Column 2: Navigation Links */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 sm:col-span-1">
             <p className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-zinc-400 mb-3.5">
               Navigation
             </p>
@@ -619,7 +637,8 @@ export function Footer() {
                 <li key={link.name}>
                   <a
                     href={link.href}
-                    className="hover:text-black transition-colors inline-flex items-center gap-1.5 group"
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className="hover:text-black transition-all inline-flex items-center gap-1.5 group"
                   >
                     <span className="text-zinc-400 group-hover:text-black transition-colors font-mono-code text-[10px]">
                       //
@@ -634,7 +653,7 @@ export function Footer() {
           </div>
 
           {/* Column 3: Connect & Socials */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 sm:col-span-1">
             <p className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-zinc-400 mb-3.5">
               Connect
             </p>
@@ -645,7 +664,7 @@ export function Footer() {
                     href={s.url}
                     target={s.url.startsWith("http") ? "_blank" : undefined}
                     rel={s.url.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="hover:text-black transition-colors inline-flex items-center gap-2 group"
+                    className="hover:text-black transition-all inline-flex items-center gap-2 group"
                   >
                     <span className="text-zinc-500 group-hover:text-black transition-colors">
                       {getSocialIcon(s.name)}
@@ -660,7 +679,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Quick Actions & Back to Top */}
+          {/* Column 4: Resources & Back to Top */}
           <div className="lg:col-span-2 flex flex-col justify-between space-y-3">
             <div>
               <p className="text-[11px] font-mono-code font-bold uppercase tracking-wider text-zinc-400 mb-3.5">
@@ -670,23 +689,21 @@ export function Footer() {
                 href={cvFile}
                 download="Muhammad_Hadee_Butt_CV.pdf"
                 onClick={handleDownloadCV}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-black/[0.08] text-xs font-semibold text-zinc-800 hover:text-black hover:border-black/30 transition-all shadow-xs w-full justify-between group"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-white border border-black/[0.08] hover:border-black/30 text-xs font-medium text-zinc-800 hover:text-black transition-all shadow-xs w-full justify-between group mb-2"
               >
                 <span className="flex items-center gap-1.5">
                   <FileText className="w-3.5 h-3.5 text-zinc-500 group-hover:text-black transition-colors" />
                   <span>Resume</span>
                 </span>
-                <span className="text-[10px] font-mono-code bg-[#F3F3F3] px-1.5 py-0.5 rounded text-zinc-600 border border-black/[0.06]">
+                <span className="text-[10px] font-mono-code bg-[#F8F8F9] px-1.5 py-0.5 rounded text-zinc-600 border border-black/[0.06]">
                   PDF
                 </span>
               </a>
-            </div>
 
-            <div>
               <button
                 type="button"
                 onClick={scrollToTop}
-                className="w-full px-3.5 py-2 rounded-xl bg-white border border-black/[0.08] hover:border-black/30 text-zinc-800 hover:text-black text-xs font-semibold transition-all flex items-center justify-between shadow-xs cursor-pointer hover:-translate-y-0.5 group active:scale-95"
+                className="w-full px-3 py-2 rounded-xl bg-white border border-black/[0.08] hover:border-black/30 text-zinc-800 hover:text-black text-xs font-medium transition-all flex items-center justify-between shadow-xs cursor-pointer group active:scale-95"
               >
                 <span>Back to Top</span>
                 <ArrowUp className="w-3.5 h-3.5 text-zinc-500 group-hover:text-black group-hover:-translate-y-0.5 transition-all" />
@@ -696,13 +713,14 @@ export function Footer() {
 
         </div>
 
-        {/* SECTION 4: SUBTLE HORIZONTAL SEPARATION LINE */}
+        {/* ============================================================== */}
+        {/* 5. SUBTLE BOTTOM SEPARATION & COPYRIGHT                       */}
+        {/* ============================================================== */}
         <div className="w-full h-[1px] bg-black/[0.08] mt-10 md:mt-12 mb-6" />
 
-        {/* SECTION 5: BOTTOM COPYRIGHT & METADATA BAR */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-500">
           <p>
-            © {new Date().getFullYear()} <span className="text-[#111111] font-bold">{name}</span>. All rights reserved.
+            © {new Date().getFullYear()} <span className="text-[#111111] font-semibold">{name}</span>. All rights reserved.
           </p>
 
           <p className="flex items-center gap-2 text-zinc-500">

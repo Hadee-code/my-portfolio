@@ -156,7 +156,7 @@ export function Navbar() {
             onClick={(e) => handleNavClick(e, "#footer")}
             className="hidden sm:inline-flex items-center gap-1.5 bg-[#111111] text-white font-semibold px-4.5 py-1.5 rounded-full text-xs hover:bg-neutral-800 active:scale-95 transition-all duration-200 shadow-xs group"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <Sparkles className="w-3.5 h-3.5 text-zinc-300" />
             <span>Hire Me</span>
           </a>
 
@@ -224,7 +224,7 @@ export function Navbar() {
                 onClick={(e) => handleNavClick(e, "#footer")}
                 className="w-full text-center bg-[#111111] text-white py-3 rounded-xl text-xs font-semibold shadow-md flex items-center justify-center gap-2"
               >
-                <Sparkles className="w-4 h-4 text-amber-300" />
+                <Sparkles className="w-4 h-4 text-zinc-300" />
                 <span>Book A Call / Hire Me</span>
                 <ArrowUpRight className="w-4 h-4" />
               </a>
